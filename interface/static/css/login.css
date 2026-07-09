@@ -1,0 +1,128 @@
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.login-box {
+  flex: 0.5;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: white;
+}
+
+.login-box h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.warning {
+  color: orange;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin: 10px 0 5px;
+  font-size: 14px;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+input:focus {
+  border-color: #ff5722;
+  outline: none;
+  box-shadow: 0 0 3px rgba(255, 87, 34, 0.5);
+}
+
+.password-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-box input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.password-box button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 16px;
+}
+
+button[type="submit"] {
+  background: #ff5722;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+button[type="submit"]:hover {
+  background: #e64a19;
+}
+
+.status {
+  margin-top: 10px;
+  min-height: 20px;
+  font-size: 14px;
+}
+
+.status.ok {
+  color: green;
+}
+
+.status.err {
+  color: red;
+}
+
+.status.loading {
+  color: #555;
+}
+
+.btn-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.image-box {
+  flex: 1;
+  background: linear-gradient(135deg, #1e1e2f, #4a148c);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-box img {
+  width: 70%;
+  border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .image-box {
+    display: none;
+  }
+
+  .login-box {
+    flex: 1;
+  }
+}

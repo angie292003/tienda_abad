@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sistema de Gestión de Tiendas</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ========================= -->
+    <!-- LOGIN -->
+    <!-- ========================= -->
+
+    <div class="login-box">
+
+        <div class="logo">
+
+            🛒
+
+        </div>
+
+        <h1>
+
+            Sistema de Gestión de Tiendas
+
+        </h1>
+
+        <p class="subtitle">
+
+            Administra productos, ventas, inventario y proveedores
+            desde una única plataforma.
+
+        </p>
+
+        <form id="formLogin">
+
+            <label>
+
+                Correo electrónico
+
+            </label>
+
+            <input
+
+                type="email"
+
+                id="usuario"
+
+                placeholder="Ingrese su correo"
+
+                autocomplete="username"
+
+                required>
+
+            <label>
+
+                Contraseña
+
+            </label>
+
+            <div class="password-box">
+
+                <input
+
+                    type="password"
+
+                    id="password"
+
+                    placeholder="Ingrese su contraseña"
+
+                    autocomplete="current-password"
+
+                    required>
+
+                <button
+
+                    type="button"
+
+                    id="togglePassword">
+
+                    👁
+
+                </button>
+
+            </div>
+
+            <div class="options">
+
+                <label>
+
+                    <input type="checkbox">
+
+                    Recordarme
+
+                </label>
+
+                <a href="#">
+
+                    ¿Olvidaste tu contraseña?
+
+                </a>
+
+            </div>
+
+            <button
+
+                type="submit">
+
+                Iniciar Sesión
+
+            </button>
+
+            <div
+
+                id="status"
+
+                class="status">
+
+            </div>
+
+        </form>
+
+        <div id="userPanel"
+             style="display:none">
+
+            <h3 id="welcomeMsg"></h3>
+
+            <button id="logoutBtn">
+
+                Cerrar Sesión
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- IMAGEN -->
+    <!-- ========================= -->
+
+    <div class="image-box">
+
+        <div class="overlay">
+
+            <h2>
+
+                Gestiona tu negocio
+                de manera inteligente
+
+            </h2>
+
+            <p>
+
+                Controla productos,
+                proveedores,
+                ventas e inventario
+                desde un solo lugar.
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+
+</body>
+
+</html>

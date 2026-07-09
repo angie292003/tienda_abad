@@ -1,0 +1,850 @@
+<!--htmlhint doctype-first:false -->
+
+<style>
+  .tiendas-page {
+    display: grid;
+    gap: 20px;
+  }
+
+  .tiendas-toolbar,
+  .tienda-form-box,
+  .tiendas-list-box,
+  .mapa-box {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  }
+
+  .tiendas-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .tiendas-toolbar h2,
+  .tienda-form-box h2,
+  .tiendas-list-box h2,
+  .mapa-box h2 {
+    color: #111827;
+    margin-bottom: 6px;
+  }
+
+  .tiendas-toolbar p,
+  .mapa-header p {
+    color: #6b7280;
+  }
+
+  .tiendas-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tiendas-search {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .tiendas-search input {
+    flex: 1;
+    min-width: 240px;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .tiendas-search input:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12);
+  }
+
+  .tienda-form-box {
+    display: none;
+  }
+
+  .tienda-form-box.open {
+    display: block;
+  }
+
+  .tienda-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .tienda-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .tienda-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+  }
+
+  .tienda-group input,
+  .tienda-group select {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .tienda-group input:focus,
+  .tienda-group select:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12);
+  }
+
+  .tienda-form-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .mapa-box {
+    display: none;
+  }
+
+  .mapa-box.open {
+    display: block;
+  }
+
+  .mapa-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .mapa-frame {
+    width: 100%;
+    height: 420px;
+    border: 0;
+    border-radius: 16px;
+  }
+
+  .tiendas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .tienda-card-view {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+    position: relative;
+  }
+
+  .tienda-card-view h3 {
+    color: #111827;
+    margin-bottom: 10px;
+    padding-right: 80px;
+  }
+
+  .tienda-card-view p {
+    color: #4b5563;
+    margin-bottom: 7px;
+    font-size: 14px;
+  }
+
+  .tienda-badge {
+    display: inline-block;
+    background: #fff7ed;
+    color: #c2410c;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .tienda-estado {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .tienda-estado.activa {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .tienda-estado.inactiva {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .tienda-card-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .xml-box-local {
+    background: #111827;
+    color: #e5e7eb;
+    padding: 16px;
+    border-radius: 12px;
+    overflow-x: auto;
+    margin-top: 16px;
+    white-space: pre-wrap;
+    display: none;
+  }
+
+  .xml-box-local.open {
+    display: block;
+  }
+
+  .tienda-empty {
+    grid-column: 1 / -1;
+  }
+
+  .tienda-message-ok {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 12px;
+  }
+
+  .tienda-message-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 1100px) {
+    .tiendas-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 650px) {
+    .tiendas-toolbar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .tiendas-grid,
+    .tienda-form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tiendas-search input {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .mapa-frame {
+      height: 320px;
+    }
+  }
+</style>
+
+<div class="tiendas-page">
+
+  <section class="tiendas-toolbar">
+    <div>
+      <h2>Módulo de tiendas</h2>
+      <p id="descripcionTiendas">
+        Consulta, registra y administra las tiendas del sistema.
+      </p>
+    </div>
+
+    <div class="tiendas-actions">
+      <button class="action-btn" id="btnMostrarFormTienda">
+        Agregar tienda
+      </button>
+
+      <button class="action-btn" id="btnCargarTiendas">
+        Recargar
+      </button>
+
+      <button class="action-btn" id="btnVerXMLTiendas">
+        Ver XML
+      </button>
+    </div>
+  </section>
+
+  <section class="tiendas-search">
+    <input
+      type="text"
+      id="buscarTiendaInput"
+      placeholder="Buscar por nombre, dirección, categoría o estado..."
+    />
+  </section>
+
+  <section class="tienda-form-box" id="formTiendaBox">
+    <h2 id="formTiendaTitulo">
+      Registrar tienda
+    </h2>
+
+    <div class="tienda-form-grid">
+
+      <div class="tienda-group">
+        <label for="tiendaNombre">Nombre</label>
+        <input type="text" id="tiendaNombre" placeholder="Ej. Tienda Central" />
+      </div>
+
+      <div class="tienda-group">
+        <label for="tiendaCategoria">Categoría</label>
+        <input type="text" id="tiendaCategoria" placeholder="Ej. Abarrotes" />
+      </div>
+
+      <div class="tienda-group">
+        <label for="tiendaDireccion">Dirección completa</label>
+        <input
+          type="text"
+          id="tiendaDireccion"
+          placeholder="Ej. Jr. Lima 802, Tarma, Junín, Perú"
+        />
+      </div>
+
+      <div class="tienda-group">
+        <label for="tiendaEstado">Estado</label>
+        <select id="tiendaEstado">
+          <option value="Activa">Activa</option>
+          <option value="Inactiva">Inactiva</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="tienda-form-actions">
+      <button class="action-btn" id="btnGuardarTienda">
+        Guardar tienda
+      </button>
+
+      <button class="action-btn danger" id="btnCancelarTienda">
+        Cancelar
+      </button>
+    </div>
+
+    <div id="mensajeTienda"></div>
+  </section>
+
+  <section class="mapa-box" id="mapaBox">
+    <div class="mapa-header">
+      <div>
+        <h2 id="mapaTitulo">
+          Ubicación de tienda
+        </h2>
+
+        <p id="mapaDireccion">
+          Seleccione una tienda para ver su ubicación.
+        </p>
+      </div>
+
+      <button class="action-btn danger" id="btnCerrarMapa">
+        Cerrar mapa
+      </button>
+    </div>
+
+    <iframe
+      id="mapaFrame"
+      class="mapa-frame"
+      loading="lazy"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin">
+    </iframe>
+  </section>
+
+  <section class="tiendas-list-box">
+    <h2>Listado de tiendas</h2>
+
+    <div id="listaTiendas" class="tiendas-grid">
+      <div class="card tienda-empty">
+        <h2>Cargando tiendas...</h2>
+        <p>Consultando información desde MongoDB Atlas.</p>
+      </div>
+    </div>
+
+    <pre id="reporteXMLTiendas" class="xml-box-local"></pre>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const GOOGLE_MAPS_API_KEY = "{{ google_maps_api_key }}";
+
+  const rolRaw = (document.getElementById("rolUsuario")?.value || "cliente")
+    .trim()
+    .toLowerCase();
+
+  const rolActual = rolRaw === "admin" ? "administrador" : rolRaw;
+
+  const listaTiendas = document.getElementById("listaTiendas");
+  const buscarInput = document.getElementById("buscarTiendaInput");
+
+  const btnMostrarForm = document.getElementById("btnMostrarFormTienda");
+  const btnGuardar = document.getElementById("btnGuardarTienda");
+  const btnCancelar = document.getElementById("btnCancelarTienda");
+  const btnCargarTiendas = document.getElementById("btnCargarTiendas");
+  const btnVerXMLTiendas = document.getElementById("btnVerXMLTiendas");
+
+  const formBox = document.getElementById("formTiendaBox");
+  const mensajeTienda = document.getElementById("mensajeTienda");
+  const descripcion = document.getElementById("descripcionTiendas");
+
+  const mapaBox = document.getElementById("mapaBox");
+  const mapaFrame = document.getElementById("mapaFrame");
+  const mapaTitulo = document.getElementById("mapaTitulo");
+  const mapaDireccion = document.getElementById("mapaDireccion");
+  const btnCerrarMapa = document.getElementById("btnCerrarMapa");
+
+  const reporteXML = document.getElementById("reporteXMLTiendas");
+
+  let tiendasCache = [];
+  let tiendaEditandoId = null;
+
+  function esAdministrador() {
+    return rolActual === "administrador";
+  }
+
+  function configurarVistaPorRol() {
+    if (!esAdministrador()) {
+      btnMostrarForm.style.display = "none";
+
+      descripcion.textContent =
+        "Consulta tiendas registradas y visualiza su ubicación en Google Maps.";
+    }
+  }
+
+  function mostrarMensaje(texto, tipo = "ok") {
+    mensajeTienda.innerHTML = `
+      <div class="${tipo === "ok" ? "tienda-message-ok" : "tienda-message-error"}">
+        ${texto}
+      </div>
+    `;
+  }
+
+  function limpiarMensaje() {
+    mensajeTienda.innerHTML = "";
+  }
+
+  function limpiarFormulario() {
+    document.getElementById("tiendaNombre").value = "";
+    document.getElementById("tiendaCategoria").value = "";
+    document.getElementById("tiendaDireccion").value = "";
+    document.getElementById("tiendaEstado").value = "Activa";
+
+    tiendaEditandoId = null;
+
+    document.getElementById("formTiendaTitulo").textContent =
+      "Registrar tienda";
+  }
+
+  function obtenerDatosFormulario() {
+    return {
+      nombre: document.getElementById("tiendaNombre").value,
+      categoria: document.getElementById("tiendaCategoria").value,
+      direccion: document.getElementById("tiendaDireccion").value,
+      estado: document.getElementById("tiendaEstado").value
+    };
+  }
+
+  async function cargarTiendas() {
+    listaTiendas.innerHTML = `
+      <div class="card tienda-empty">
+        <h2>Cargando tiendas...</h2>
+        <p>Consultando información desde MongoDB Atlas.</p>
+      </div>
+    `;
+
+    try {
+      const response = await fetch("/api/v1/tiendas");
+      const data = await response.json();
+
+      if (!data.ok) {
+        listaTiendas.innerHTML = `
+          <div class="card tienda-empty">
+            <h2>Error</h2>
+            <p>${data.message || "No se pudieron cargar las tiendas."}</p>
+          </div>
+        `;
+        return;
+      }
+
+      tiendasCache = data.tiendas || [];
+
+      filtrarTiendas();
+
+    } catch (error) {
+      listaTiendas.innerHTML = `
+        <div class="card tienda-empty">
+          <h2>Error de conexión</h2>
+          <p>No se pudo conectar con la API de tiendas.</p>
+        </div>
+      `;
+    }
+  }
+
+  function filtrarTiendas() {
+    const texto = buscarInput.value.toLowerCase().trim();
+
+    const tiendasFiltradas = tiendasCache.filter((tienda) => {
+      return (
+        (tienda.nombre || "").toLowerCase().includes(texto) ||
+        (tienda.direccion || "").toLowerCase().includes(texto) ||
+        (tienda.categoria || "").toLowerCase().includes(texto) ||
+        (tienda.estado || "").toLowerCase().includes(texto)
+      );
+    });
+
+    renderizarTiendas(tiendasFiltradas);
+  }
+
+  function renderizarTiendas(tiendas) {
+    if (!tiendas || tiendas.length === 0) {
+      listaTiendas.innerHTML = `
+        <div class="card tienda-empty">
+          <h2>Sin tiendas</h2>
+          <p>No hay tiendas registradas o no coinciden con la búsqueda.</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = "";
+
+    tiendas.forEach((tienda) => {
+      const nombre = tienda.nombre || "Tienda sin nombre";
+      const direccion = tienda.direccion || "Sin dirección";
+      const categoria = tienda.categoria || "Sin categoría";
+      const estado = tienda.estado || "Activa";
+
+      const estadoClase = estado.toLowerCase() === "activa"
+        ? "activa"
+        : "inactiva";
+
+      html += `
+        <div class="tienda-card-view">
+          <span class="tienda-estado ${estadoClase}">
+            ${estado}
+          </span>
+
+          <span class="tienda-badge">
+            ${categoria}
+          </span>
+
+          <h3>${nombre}</h3>
+
+          <p>
+            <strong>Dirección:</strong>
+            ${direccion}
+          </p>
+
+          <p>
+            <strong>Categoría:</strong>
+            ${categoria}
+          </p>
+
+          <p>
+            <strong>Estado:</strong>
+            ${estado}
+          </p>
+
+          <div class="tienda-card-actions">
+            <button
+              class="action-btn btnVerMapa"
+              data-id="${tienda.id}">
+              Ver mapa
+            </button>
+
+            ${
+              esAdministrador()
+                ? `<button class="action-btn btnEditarTienda"
+                    data-id="${tienda.id}">
+                    Editar
+                  </button>`
+                : ""
+            }
+
+            ${
+              esAdministrador()
+                ? `<button class="action-btn ${estado === "Activa" ? "danger" : ""} btnCambiarEstadoTienda"
+                    data-id="${tienda.id}">
+                    ${estado === "Activa" ? "Desactivar" : "Activar"}
+                  </button>`
+                : ""
+            }
+          </div>
+        </div>
+      `;
+    });
+
+    listaTiendas.innerHTML = html;
+
+    document.querySelectorAll(".btnVerMapa").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tienda = obtenerTiendaPorId(btn.getAttribute("data-id"));
+        mostrarMapa(tienda);
+      });
+    });
+
+    document.querySelectorAll(".btnEditarTienda").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tienda = obtenerTiendaPorId(btn.getAttribute("data-id"));
+        cargarTiendaEnFormulario(tienda);
+      });
+    });
+
+    document.querySelectorAll(".btnCambiarEstadoTienda").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const tienda = obtenerTiendaPorId(btn.getAttribute("data-id"));
+        cambiarEstadoTienda(tienda);
+      });
+    });
+  }
+
+  function obtenerTiendaPorId(id) {
+    return tiendasCache.find((tienda) => tienda.id === id);
+  }
+
+  function cargarTiendaEnFormulario(tienda) {
+    if (!esAdministrador() || !tienda) return;
+
+    tiendaEditandoId = tienda.id;
+
+    document.getElementById("formTiendaTitulo").textContent =
+      "Editar tienda";
+
+    document.getElementById("tiendaNombre").value = tienda.nombre || "";
+    document.getElementById("tiendaCategoria").value = tienda.categoria || "";
+    document.getElementById("tiendaDireccion").value = tienda.direccion || "";
+    document.getElementById("tiendaEstado").value = tienda.estado || "Activa";
+
+    formBox.classList.add("open");
+
+    formBox.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  async function guardarTienda() {
+    limpiarMensaje();
+
+    if (!esAdministrador()) {
+      mostrarMensaje("Solo el administrador puede guardar tiendas.", "error");
+      return;
+    }
+
+    const datos = obtenerDatosFormulario();
+
+    const esEdicion = tiendaEditandoId !== null;
+
+    const url = esEdicion
+      ? `/api/v1/tiendas/${tiendaEditandoId}`
+      : "/api/v1/tiendas";
+
+    const metodo = esEdicion ? "PUT" : "POST";
+
+    try {
+      const response = await fetch(url, {
+        method: metodo,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datos)
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        mostrarMensaje(
+          data.message || "No se pudo guardar la tienda.",
+          "error"
+        );
+        return;
+      }
+
+      mostrarMensaje(
+        esEdicion
+          ? "Tienda actualizada correctamente."
+          : "Tienda registrada correctamente."
+      );
+
+      limpiarFormulario();
+      formBox.classList.remove("open");
+
+      await cargarTiendas();
+
+    } catch (error) {
+      mostrarMensaje("Error de conexión con el servidor.", "error");
+    }
+  }
+
+  async function cambiarEstadoTienda(tienda) {
+    if (!esAdministrador() || !tienda) return;
+
+    const nuevoEstado = tienda.estado === "Activa"
+      ? "Inactiva"
+      : "Activa";
+
+    const confirmar = confirm(
+      nuevoEstado === "Activa"
+        ? "¿Deseas activar esta tienda?"
+        : "¿Deseas desactivar esta tienda?"
+    );
+
+    if (!confirmar) return;
+
+    const datos = {
+      nombre: tienda.nombre,
+      categoria: tienda.categoria,
+      direccion: tienda.direccion,
+      estado: nuevoEstado
+    };
+
+    try {
+      const response = await fetch(`/api/v1/tiendas/${tienda.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datos)
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        alert(data.message || "No se pudo cambiar el estado.");
+        return;
+      }
+
+      await cargarTiendas();
+
+    } catch (error) {
+      alert("Error de conexión con el servidor.");
+    }
+  }
+
+  function mostrarMapa(tienda) {
+    if (!tienda || !tienda.direccion) {
+      alert("Esta tienda no tiene dirección registrada.");
+      return;
+    }
+
+    if (!GOOGLE_MAPS_API_KEY) {
+      alert("No se encontró la API Key de Google Maps.");
+      return;
+    }
+
+    const direccionCompleta = construirDireccionCompleta(tienda.direccion);
+    const consulta = encodeURIComponent(direccionCompleta);
+
+    mapaTitulo.textContent = tienda.nombre || "Ubicación de tienda";
+    mapaDireccion.textContent = direccionCompleta;
+
+    mapaFrame.src =
+      `https://www.google.com/maps/embed/v1/place?key=${GOOGLE_MAPS_API_KEY}&q=${consulta}`;
+
+    mapaBox.classList.add("open");
+
+    mapaBox.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  function construirDireccionCompleta(direccion) {
+    const texto = direccion.toLowerCase();
+
+    if (
+      texto.includes("perú") ||
+      texto.includes("peru") ||
+      texto.includes("tarma") ||
+      texto.includes("huancayo") ||
+      texto.includes("junín") ||
+      texto.includes("junin")
+    ) {
+      return direccion;
+    }
+
+    return `${direccion}, Tarma, Junín, Perú`;
+  }
+
+  function cerrarMapa() {
+    mapaBox.classList.remove("open");
+    mapaFrame.src = "";
+  }
+
+  async function cargarTiendasXML() {
+    reporteXML.classList.toggle("open");
+
+    if (!reporteXML.classList.contains("open")) {
+      return;
+    }
+
+    reporteXML.textContent = "Cargando XML...";
+
+    try {
+      const response = await fetch("/api/v1/tiendas/xml");
+
+      if (!response.ok) {
+        throw new Error("No se pudo cargar el XML.");
+      }
+
+      const text = await response.text();
+
+      reporteXML.textContent = text;
+
+    } catch (error) {
+      reporteXML.textContent = "Error de conexión con el XML.";
+    }
+  }
+
+  btnMostrarForm.addEventListener("click", () => {
+    if (!esAdministrador()) return;
+
+    formBox.classList.toggle("open");
+
+    if (!formBox.classList.contains("open")) {
+      limpiarFormulario();
+      limpiarMensaje();
+    }
+  });
+
+  btnCancelar.addEventListener("click", () => {
+    limpiarFormulario();
+    limpiarMensaje();
+    formBox.classList.remove("open");
+  });
+
+  btnGuardar.addEventListener("click", guardarTienda);
+  btnCargarTiendas.addEventListener("click", cargarTiendas);
+  btnVerXMLTiendas.addEventListener("click", cargarTiendasXML);
+  btnCerrarMapa.addEventListener("click", cerrarMapa);
+  buscarInput.addEventListener("input", filtrarTiendas);
+
+  configurarVistaPorRol();
+  cargarTiendas();
+})();
+</script>

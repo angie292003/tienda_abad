@@ -1,0 +1,1054 @@
+<!--htmlhint doctype-first:false -->
+
+<style>
+  .reportes-page {
+    display: grid;
+    gap: 20px;
+  }
+
+  .reportes-toolbar,
+  .reportes-card,
+  .reportes-table-box,
+  .reportes-panel {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  }
+
+  .reportes-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .reportes-toolbar h2,
+  .reportes-table-box h2,
+  .reportes-panel h2 {
+    color: #111827;
+    margin-bottom: 6px;
+  }
+
+  .reportes-toolbar p {
+    color: #6b7280;
+  }
+
+  .reportes-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .reportes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .reportes-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .reportes-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: #fff7ed;
+    color: #ff6a00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .reportes-card p {
+    color: #6b7280;
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .reportes-card h3 {
+    color: #111827;
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+
+  .reportes-card span {
+    color: #16a34a;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .reportes-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 20px;
+  }
+
+  .reportes-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .reporte-row {
+    display: grid;
+    grid-template-columns: 42px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #f1f5f9;
+    border-radius: 14px;
+    background: #f9fafb;
+  }
+
+  .reporte-row-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: #fff7ed;
+    color: #ff6a00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .reporte-row strong {
+    color: #111827;
+    display: block;
+    font-size: 14px;
+  }
+
+  .reporte-row p {
+    color: #6b7280;
+    font-size: 12px;
+  }
+
+  .reporte-row b {
+    color: #111827;
+    font-size: 15px;
+  }
+
+  .reportes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    font-size: 14px;
+  }
+
+  .reportes-table th,
+  .reportes-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+  }
+
+  .reportes-table th {
+    background: #f9fafb;
+    color: #374151;
+    font-size: 13px;
+  }
+
+  .reportes-table td {
+    color: #4b5563;
+  }
+
+  .badge-ok {
+    background: #dcfce7;
+    color: #166534;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .badge-warning {
+    background: #fff7ed;
+    color: #9a3412;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .badge-danger {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .reportes-empty {
+    padding: 16px;
+    border-radius: 14px;
+    background: #f9fafb;
+    color: #6b7280;
+  }
+
+  .reportes-filter-box {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+
+  .reportes-filter-box input,
+  .reportes-filter-box select {
+    padding: 11px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .reportes-filter-box input:focus,
+  .reportes-filter-box select:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12);
+  }
+
+  @media (max-width: 1200px) {
+    .reportes-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .reportes-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 650px) {
+    .reportes-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .reportes-toolbar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .reportes-table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .reporte-row {
+      grid-template-columns: 38px 1fr;
+    }
+
+    .reporte-row b {
+      grid-column: 1 / -1;
+      text-align: right;
+    }
+  }
+
+  @media print {
+    .topbar,
+    .sidebar,
+    .reportes-actions,
+    .page-header {
+      display: none !important;
+    }
+
+    .dashboard-layout,
+    .main-area,
+    .content-area {
+      height: auto !important;
+      overflow: visible !important;
+    }
+
+    .reportes-page {
+      display: block;
+    }
+
+    .reportes-card,
+    .reportes-toolbar,
+    .reportes-panel,
+    .reportes-table-box {
+      box-shadow: none;
+      page-break-inside: avoid;
+      margin-bottom: 16px;
+    }
+  }
+</style>
+
+<div class="reportes-page">
+
+  <section class="reportes-toolbar">
+    <div>
+      <h2>Reportes generales</h2>
+      <p>
+        Resumen real de ventas, productos, inventario, proveedores y tiendas.
+      </p>
+    </div>
+
+    <div class="reportes-actions">
+      <button class="action-btn" id="btnActualizarReportes">
+        Actualizar
+      </button>
+
+      <button class="action-btn" id="btnExportarReporte">
+        Exportar CSV
+      </button>
+
+      <button class="action-btn" id="btnImprimirReporte">
+        Imprimir
+      </button>
+    </div>
+  </section>
+
+  <section class="reportes-grid">
+
+    <div class="reportes-card">
+      <div class="reportes-icon">🛍️</div>
+      <div>
+        <p>Ventas del día</p>
+        <h3 id="reporteVentasDia">S/ 0.00</h3>
+        <span id="reporteVentasDiaDetalle">0 ventas hoy</span>
+      </div>
+    </div>
+
+    <div class="reportes-card">
+      <div class="reportes-icon">🧾</div>
+      <div>
+        <p>Ventas del mes</p>
+        <h3 id="reporteVentasMes">S/ 0.00</h3>
+        <span id="reporteVentasMesDetalle">0 ventas este mes</span>
+      </div>
+    </div>
+
+    <div class="reportes-card">
+      <div class="reportes-icon">📦</div>
+      <div>
+        <p>Productos</p>
+        <h3 id="reporteProductos">0</h3>
+        <span id="reporteProductosDetalle">0 activos</span>
+      </div>
+    </div>
+
+    <div class="reportes-card">
+      <div class="reportes-icon">⚠️</div>
+      <div>
+        <p>Bajo stock</p>
+        <h3 id="reporteBajoStock">0</h3>
+        <span id="reporteBajoStockDetalle">Revisar inventario</span>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="reportes-grid">
+
+    <div class="reportes-card">
+      <div class="reportes-icon">💰</div>
+      <div>
+        <p>Valor inventario</p>
+        <h3 id="reporteValorInventario">S/ 0.00</h3>
+        <span>Según precio de compra</span>
+      </div>
+    </div>
+
+    <div class="reportes-card">
+      <div class="reportes-icon">🚚</div>
+      <div>
+        <p>Proveedores</p>
+        <h3 id="reporteProveedores">0</h3>
+        <span id="reporteProveedoresDetalle">0 activos</span>
+      </div>
+    </div>
+
+    <div class="reportes-card">
+      <div class="reportes-icon">🏪</div>
+      <div>
+        <p>Tiendas</p>
+        <h3 id="reporteTiendas">0</h3>
+        <span id="reporteTiendasDetalle">0 activas</span>
+      </div>
+    </div>
+
+    <div class="reportes-card">
+      <div class="reportes-icon">📊</div>
+      <div>
+        <p>Total ventas</p>
+        <h3 id="reporteTotalVentas">0</h3>
+        <span>Historial completo</span>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="reportes-layout">
+
+    <div class="reportes-panel">
+      <h2>Productos más vendidos</h2>
+      <p class="mini-text">
+        Calculado según las ventas registradas.
+      </p>
+
+      <div id="listaProductosMasVendidosReporte" class="reportes-list">
+        <div class="reportes-empty">
+          Cargando productos más vendidos...
+        </div>
+      </div>
+    </div>
+
+    <div class="reportes-panel">
+      <h2>Ventas por método de pago</h2>
+      <p class="mini-text">
+        Resumen agrupado por forma de pago.
+      </p>
+
+      <div id="listaMetodosPagoReporte" class="reportes-list">
+        <div class="reportes-empty">
+          Cargando métodos de pago...
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="reportes-table-box">
+    <h2>Productos con bajo stock</h2>
+    <p class="mini-text">
+      Productos cuyo stock actual es menor o igual al stock mínimo.
+    </p>
+
+    <table class="reportes-table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Categoría</th>
+          <th>Marca</th>
+          <th>Stock</th>
+          <th>Stock mínimo</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+
+      <tbody id="tablaBajoStockReporte">
+        <tr>
+          <td colspan="6">Cargando información...</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="reportes-table-box">
+    <h2>Ventas recientes</h2>
+    <p class="mini-text">
+      Últimas ventas registradas en el sistema.
+    </p>
+
+    <div class="reportes-filter-box">
+      <input
+        type="text"
+        id="buscarVentaReporte"
+        placeholder="Buscar por usuario, cliente o método..."
+      />
+
+      <select id="filtroMetodoPagoReporte">
+        <option value="">Todos los métodos</option>
+      </select>
+    </div>
+
+    <table class="reportes-table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Usuario</th>
+          <th>Método</th>
+          <th>Estado</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+
+      <tbody id="tablaVentasRecientesReporte">
+        <tr>
+          <td colspan="5">Cargando ventas...</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const estadoReporte = {
+    productos: [],
+    ventas: [],
+    proveedores: [],
+    tiendas: []
+  };
+
+  const btnActualizar = document.getElementById("btnActualizarReportes");
+  const btnExportar = document.getElementById("btnExportarReporte");
+  const btnImprimir = document.getElementById("btnImprimirReporte");
+
+  const buscarVentaInput = document.getElementById("buscarVentaReporte");
+  const filtroMetodoPago = document.getElementById("filtroMetodoPagoReporte");
+
+  async function cargarReportes() {
+    mostrarCargando();
+
+    const [productos, ventas, proveedores, tiendas] = await Promise.all([
+      obtenerProductos(),
+      obtenerVentas(),
+      obtenerProveedores(),
+      obtenerTiendas()
+    ]);
+
+    estadoReporte.productos = productos;
+    estadoReporte.ventas = ventas;
+    estadoReporte.proveedores = proveedores;
+    estadoReporte.tiendas = tiendas;
+
+    actualizarCards();
+    renderizarMasVendidos();
+    renderizarMetodosPago();
+    renderizarTablaBajoStock();
+    cargarFiltroMetodoPago();
+    renderizarVentasRecientes();
+  }
+
+  function mostrarCargando() {
+    document.getElementById("listaProductosMasVendidosReporte").innerHTML = `
+      <div class="reportes-empty">Cargando productos más vendidos...</div>
+    `;
+
+    document.getElementById("listaMetodosPagoReporte").innerHTML = `
+      <div class="reportes-empty">Cargando métodos de pago...</div>
+    `;
+
+    document.getElementById("tablaBajoStockReporte").innerHTML = `
+      <tr>
+        <td colspan="6">Cargando información...</td>
+      </tr>
+    `;
+
+    document.getElementById("tablaVentasRecientesReporte").innerHTML = `
+      <tr>
+        <td colspan="5">Cargando ventas...</td>
+      </tr>
+    `;
+  }
+
+  async function obtenerProductos() {
+    try {
+      const response = await fetch("/api/v1/productos");
+      const data = await response.json();
+
+      if (!data.ok) return [];
+
+      return data.productos || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async function obtenerVentas() {
+    try {
+      const response = await fetch("/api/v1/ventas");
+      const data = await response.json();
+
+      if (!data.ok) return [];
+
+      return data.ventas || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async function obtenerProveedores() {
+    try {
+      const response = await fetch("/api/v1/proveedores");
+      const data = await response.json();
+
+      if (!data.ok) return [];
+
+      return data.proveedores || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  async function obtenerTiendas() {
+    try {
+      const response = await fetch("/api/v1/tiendas");
+      const data = await response.json();
+
+      if (!data.ok) return [];
+
+      return data.tiendas || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function actualizarCards() {
+    const productos = estadoReporte.productos;
+    const ventas = estadoReporte.ventas;
+    const proveedores = estadoReporte.proveedores;
+    const tiendas = estadoReporte.tiendas;
+
+    const hoy = new Date();
+
+    const ventasDia = ventas.filter((venta) => {
+      return esMismaFecha(parsearFecha(venta.fecha), hoy);
+    });
+
+    const ventasMes = ventas.filter((venta) => {
+      return esMismoMes(parsearFecha(venta.fecha), hoy);
+    });
+
+    const totalDia = ventasDia.reduce((total, venta) => {
+      return total + Number(venta.total || 0);
+    }, 0);
+
+    const totalMes = ventasMes.reduce((total, venta) => {
+      return total + Number(venta.total || 0);
+    }, 0);
+
+    const productosActivos = productos.filter((producto) => {
+      return producto.estado === true && Number(producto.stock || 0) > 0;
+    });
+
+    const bajoStock = productos.filter((producto) => {
+      return Number(producto.stock || 0) <= Number(producto.stockMinimo || 0);
+    });
+
+    const valorInventario = productos.reduce((total, producto) => {
+      return total + (
+        Number(producto.stock || 0) *
+        Number(producto.precioCompra || 0)
+      );
+    }, 0);
+
+    const proveedoresActivos = proveedores.filter((proveedor) => {
+      return proveedor.estado === true;
+    });
+
+    const tiendasActivas = tiendas.filter((tienda) => {
+      return (tienda.estado || "Activa") === "Activa";
+    });
+
+    setText("reporteVentasDia", formatoMoneda(totalDia));
+    setText("reporteVentasDiaDetalle", `${ventasDia.length} ventas hoy`);
+
+    setText("reporteVentasMes", formatoMoneda(totalMes));
+    setText("reporteVentasMesDetalle", `${ventasMes.length} ventas este mes`);
+
+    setText("reporteProductos", productos.length);
+    setText("reporteProductosDetalle", `${productosActivos.length} activos`);
+
+    setText("reporteBajoStock", bajoStock.length);
+    setText("reporteBajoStockDetalle", bajoStock.length === 0 ? "Inventario correcto" : "Revisar inventario");
+
+    setText("reporteValorInventario", formatoMoneda(valorInventario));
+
+    setText("reporteProveedores", proveedores.length);
+    setText("reporteProveedoresDetalle", `${proveedoresActivos.length} activos`);
+
+    setText("reporteTiendas", tiendas.length);
+    setText("reporteTiendasDetalle", `${tiendasActivas.length} activas`);
+
+    setText("reporteTotalVentas", ventas.length);
+  }
+
+  function renderizarMasVendidos() {
+    const contenedor = document.getElementById("listaProductosMasVendidosReporte");
+
+    const productos = calcularVentasPorProducto();
+
+    const top = productos
+      .sort((a, b) => Number(b.unidadesVendidas || 0) - Number(a.unidadesVendidas || 0))
+      .slice(0, 5);
+
+    if (top.length === 0) {
+      contenedor.innerHTML = `
+        <div class="reportes-empty">
+          No hay productos registrados.
+        </div>
+      `;
+      return;
+    }
+
+    let html = "";
+
+    top.forEach((producto, index) => {
+      html += `
+        <div class="reporte-row">
+          <div class="reporte-row-icon">
+            ${index + 1}
+          </div>
+
+          <div>
+            <strong>${producto.nombre || "Producto sin nombre"}</strong>
+            <p>
+              ${producto.categoria || "Sin categoría"} ·
+              ${producto.marca || "Sin marca"}
+            </p>
+          </div>
+
+          <b>${producto.unidadesVendidas || 0} und.</b>
+        </div>
+      `;
+    });
+
+    contenedor.innerHTML = html;
+  }
+
+  function renderizarMetodosPago() {
+    const contenedor = document.getElementById("listaMetodosPagoReporte");
+
+    const resumen = {};
+
+    estadoReporte.ventas.forEach((venta) => {
+      const metodo = venta.metodoPago || "No especificado";
+
+      if (!resumen[metodo]) {
+        resumen[metodo] = {
+          cantidad: 0,
+          total: 0
+        };
+      }
+
+      resumen[metodo].cantidad += 1;
+      resumen[metodo].total += Number(venta.total || 0);
+    });
+
+    const metodos = Object.keys(resumen);
+
+    if (metodos.length === 0) {
+      contenedor.innerHTML = `
+        <div class="reportes-empty">
+          No hay ventas registradas.
+        </div>
+      `;
+      return;
+    }
+
+    let html = "";
+
+    metodos.forEach((metodo) => {
+      html += `
+        <div class="reporte-row">
+          <div class="reporte-row-icon">
+            💳
+          </div>
+
+          <div>
+            <strong>${metodo}</strong>
+            <p>${resumen[metodo].cantidad} ventas registradas</p>
+          </div>
+
+          <b>${formatoMoneda(resumen[metodo].total)}</b>
+        </div>
+      `;
+    });
+
+    contenedor.innerHTML = html;
+  }
+
+  function renderizarTablaBajoStock() {
+    const tbody = document.getElementById("tablaBajoStockReporte");
+
+    const productos = estadoReporte.productos.filter((producto) => {
+      return Number(producto.stock || 0) <= Number(producto.stockMinimo || 0);
+    });
+
+    if (productos.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6">No hay productos con bajo stock.</td>
+        </tr>
+      `;
+      return;
+    }
+
+    let html = "";
+
+    productos.forEach((producto) => {
+      const stock = Number(producto.stock || 0);
+
+      let estadoHTML = `<span class="badge-warning">Bajo stock</span>`;
+
+      if (stock <= 0) {
+        estadoHTML = `<span class="badge-danger">Sin stock</span>`;
+      }
+
+      html += `
+        <tr>
+          <td>${producto.nombre || "Sin nombre"}</td>
+          <td>${producto.categoria || "Sin categoría"}</td>
+          <td>${producto.marca || "Sin marca"}</td>
+          <td>${producto.stock || 0}</td>
+          <td>${producto.stockMinimo || 0}</td>
+          <td>${estadoHTML}</td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+  }
+
+  function cargarFiltroMetodoPago() {
+    const metodos = [
+      ...new Set(
+        estadoReporte.ventas
+          .map((venta) => venta.metodoPago)
+          .filter(Boolean)
+      )
+    ];
+
+    filtroMetodoPago.innerHTML = `
+      <option value="">Todos los métodos</option>
+    `;
+
+    metodos.forEach((metodo) => {
+      filtroMetodoPago.innerHTML += `
+        <option value="${metodo}">
+          ${metodo}
+        </option>
+      `;
+    });
+  }
+
+  function renderizarVentasRecientes() {
+    const tbody = document.getElementById("tablaVentasRecientesReporte");
+
+    const texto = buscarVentaInput.value.toLowerCase().trim();
+    const metodo = filtroMetodoPago.value;
+
+    let ventas = [...estadoReporte.ventas];
+
+    if (metodo) {
+      ventas = ventas.filter((venta) => venta.metodoPago === metodo);
+    }
+
+    if (texto) {
+      ventas = ventas.filter((venta) => {
+        return (
+          (venta.usuario || "").toLowerCase().includes(texto) ||
+          (venta.cliente || "").toLowerCase().includes(texto) ||
+          (venta.metodoPago || "").toLowerCase().includes(texto) ||
+          (venta.estado || "").toLowerCase().includes(texto)
+        );
+      });
+    }
+
+    ventas = ventas
+      .sort((a, b) => {
+        const fechaA = parsearFecha(a.fecha);
+        const fechaB = parsearFecha(b.fecha);
+
+        return (fechaB?.getTime() || 0) - (fechaA?.getTime() || 0);
+      })
+      .slice(0, 10);
+
+    if (ventas.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="5">No hay ventas que coincidan con el filtro.</td>
+        </tr>
+      `;
+      return;
+    }
+
+    let html = "";
+
+    ventas.forEach((venta) => {
+      html += `
+        <tr>
+          <td>${venta.fecha || "Sin fecha"}</td>
+          <td>${venta.usuario || "No registrado"}</td>
+          <td>${venta.metodoPago || "No especificado"}</td>
+          <td><span class="badge-ok">${venta.estado || "Registrada"}</span></td>
+          <td><strong>${formatoMoneda(Number(venta.total || 0))}</strong></td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+  }
+
+  function calcularVentasPorProducto() {
+    const mapaVentas = {};
+
+    estadoReporte.ventas.forEach((venta) => {
+      const productosVenta = venta.productos || [];
+
+      productosVenta.forEach((item) => {
+        const productoId = item.productoId || item.id;
+
+        if (!productoId) return;
+
+        if (!mapaVentas[productoId]) {
+          mapaVentas[productoId] = 0;
+        }
+
+        mapaVentas[productoId] += Number(item.cantidad || 0);
+      });
+    });
+
+    return estadoReporte.productos.map((producto) => {
+      return {
+        ...producto,
+        unidadesVendidas: mapaVentas[producto.id] || 0
+      };
+    });
+  }
+
+  function exportarCSV() {
+    const filas = [];
+
+    filas.push([
+      "Reporte",
+      "Valor"
+    ]);
+
+    filas.push([
+      "Ventas del día",
+      document.getElementById("reporteVentasDia").textContent
+    ]);
+
+    filas.push([
+      "Ventas del mes",
+      document.getElementById("reporteVentasMes").textContent
+    ]);
+
+    filas.push([
+      "Productos registrados",
+      document.getElementById("reporteProductos").textContent
+    ]);
+
+    filas.push([
+      "Productos bajo stock",
+      document.getElementById("reporteBajoStock").textContent
+    ]);
+
+    filas.push([
+      "Valor inventario",
+      document.getElementById("reporteValorInventario").textContent
+    ]);
+
+    filas.push([]);
+
+    filas.push([
+      "Ventas recientes"
+    ]);
+
+    filas.push([
+      "Fecha",
+      "Usuario",
+      "Método",
+      "Estado",
+      "Total"
+    ]);
+
+    estadoReporte.ventas.forEach((venta) => {
+      filas.push([
+        venta.fecha || "",
+        venta.usuario || "",
+        venta.metodoPago || "",
+        venta.estado || "",
+        venta.total || 0
+      ]);
+    });
+
+    const contenido = filas
+      .map((fila) => fila.map((celda) => `"${celda}"`).join(","))
+      .join("\n");
+
+    const blob = new Blob([contenido], {
+      type: "text/csv;charset=utf-8;"
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = "reporte_gestor_tiendas.csv";
+    enlace.click();
+
+    URL.revokeObjectURL(url);
+  }
+
+  function parsearFecha(fecha) {
+    if (!fecha) return null;
+
+    const texto = String(fecha).trim();
+
+    if (/^\d{4}-\d{2}-\d{2}/.test(texto)) {
+      return new Date(texto);
+    }
+
+    if (/^\d{2}\/\d{2}\/\d{4}/.test(texto)) {
+      const fechaSolo = texto.split(" ")[0];
+      const partes = fechaSolo.split("/");
+
+      const dia = Number(partes[0]);
+      const mes = Number(partes[1]) - 1;
+      const anio = Number(partes[2]);
+
+      return new Date(anio, mes, dia);
+    }
+
+    const fechaConvertida = new Date(texto);
+
+    if (isNaN(fechaConvertida.getTime())) {
+      return null;
+    }
+
+    return fechaConvertida;
+  }
+
+  function esMismaFecha(fechaA, fechaB) {
+    if (!fechaA || !fechaB) return false;
+
+    return (
+      fechaA.getFullYear() === fechaB.getFullYear() &&
+      fechaA.getMonth() === fechaB.getMonth() &&
+      fechaA.getDate() === fechaB.getDate()
+    );
+  }
+
+  function esMismoMes(fechaA, fechaB) {
+    if (!fechaA || !fechaB) return false;
+
+    return (
+      fechaA.getFullYear() === fechaB.getFullYear() &&
+      fechaA.getMonth() === fechaB.getMonth()
+    );
+  }
+
+  function formatoMoneda(valor) {
+    return `S/ ${Number(valor || 0).toFixed(2)}`;
+  }
+
+  function setText(id, valor) {
+    const elemento = document.getElementById(id);
+
+    if (elemento) {
+      elemento.textContent = valor;
+    }
+  }
+
+  btnActualizar.addEventListener("click", cargarReportes);
+  btnExportar.addEventListener("click", exportarCSV);
+  btnImprimir.addEventListener("click", () => window.print());
+
+  buscarVentaInput.addEventListener("input", renderizarVentasRecientes);
+  filtroMetodoPago.addEventListener("change", renderizarVentasRecientes);
+
+  cargarReportes();
+})();
+</script>

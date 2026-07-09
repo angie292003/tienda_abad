@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Panel Principal | Gestor de Tiendas</title>
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/base.css') }}"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/home.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Datos enviados desde Flask -->
+    <input type="hidden" id="rolUsuario" value="{{ rol }}" />
+    <input type="hidden" id="usuarioActivo" value="{{ usuario }}" />
+
+    <div class="dashboard-layout">
+      <!-- SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+          <div class="logo-icon">🛍️</div>
+
+          <h2>Gestor de <span>Tiendas</span></h2>
+        </div>
+
+        <div class="user-box" id="userBox">
+          <div class="user-avatar">👤</div>
+
+          <div class="user-info">
+            <strong id="nombreUsuario"> {{ usuario }} </strong>
+
+            <small> Rol: {{ rol }} </small>
+          </div>
+
+          <span class="user-arrow"> ▾ </span>
+
+          <div class="user-options" id="userOptions">
+            <a href="#/perfil">Mi perfil</a>
+            <a href="#/configuracion">Configuración</a>
+          </div>
+        </div>
+
+        <!-- Menú fijo en HTML -->
+        <nav class="sidebar-menu" id="menuPrincipal">
+          <a href="#/inicio" data-ruta="#/inicio">
+            <span>🏠</span>
+            Inicio
+          </a>
+
+          <a href="#/productos" data-ruta="#/productos">
+            <span>📦</span>
+            Productos
+          </a>
+
+          <a href="#/ventas" data-ruta="#/ventas">
+            <span>🛒</span>
+            Ventas
+          </a>
+
+          <a href="#/proveedores" data-ruta="#/proveedores">
+            <span>🚚</span>
+            Proveedores
+          </a>
+
+          <a href="#/tiendas" data-ruta="#/tiendas">
+            <span>🏪</span>
+            Tiendas
+          </a>
+
+          <a href="#/usuarios" data-ruta="#/usuarios">
+            <span>👥</span>
+            Usuarios
+          </a>
+
+          <a href="#/reportes" data-ruta="#/reportes">
+            <span>📊</span>
+            Reportes
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <a href="/logout" class="btn-logout">
+            <span>↪</span>
+            Cerrar sesión
+          </a>
+        </div>
+      </aside>
+
+      <!-- ZONA DERECHA -->
+      <section class="main-area">
+        <header class="topbar">
+          <button id="btnMenu" class="btn-menu">☰</button>
+
+          <!-- Información de tienda activa y fecha/hora real -->
+          <div class="store-location-box">
+
+            <select id="selectorTiendaActiva" class="store-select">
+              <option value="">Cargando tiendas...</option>
+            </select>
+
+            <span id="ubicacionTiendaDetalle"> Seleccione una tienda </span>
+
+            <span id="fechaHoraSistema"> Cargando fecha y hora... </span>
+          </div>
+
+          <div class="top-actions">
+            <button class="top-btn" id="btnBusqueda" title="Buscar">🔍</button>
+
+            <button
+              class="top-btn notification-btn"
+              id="btnNotificaciones"
+              title="Notificaciones"
+            >
+              🔔
+              <span class="badge-count">3</span>
+            </button>
+
+            <button class="top-btn cart-btn" id="btnCarrito" title="Carrito">
+              🛒
+              <span class="badge-count">2</span>
+            </button>
+          </div>
+
+          <div class="search-panel" id="searchPanel">
+            <div class="search-box">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Buscar módulo..."
+                autocomplete="off"
+              />
+
+              <button id="btnCerrarBusqueda">✖</button>
+            </div>
+
+            <div id="searchResults" class="search-results"></div>
+          </div>
+        </header>
+
+        <main class="content-area">
+          <section class="page-header">
+            <div>
+              <h1 id="tituloVista">Panel principal</h1>
+
+              <p id="descripcionVista">
+                Resumen general de la tienda y sus operaciones.
+              </p>
+            </div>
+          </section>
+
+          <!-- Aquí se cargarán los otros HTML -->
+          <section id="contenidoApp" class="spa-content"></section>
+        </main>
+      </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+  </body>
+</html>

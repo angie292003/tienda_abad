@@ -1,0 +1,651 @@
+<!--htmlhint doctype-first:false -->
+
+<style>
+  .usuarios-page {
+    display: grid;
+    gap: 20px;
+  }
+
+  .usuarios-toolbar,
+  .usuario-form-box,
+  .usuarios-list-box {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  }
+
+  .usuarios-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .usuarios-toolbar h2,
+  .usuario-form-box h2,
+  .usuarios-list-box h2 {
+    color: #111827;
+    margin-bottom: 6px;
+  }
+
+  .usuarios-toolbar p {
+    color: #6b7280;
+  }
+
+  .usuarios-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .usuarios-search {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .usuarios-search input,
+  .usuarios-search select {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .usuarios-search input {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .usuario-form-box {
+    display: none;
+  }
+
+  .usuario-form-box.open {
+    display: block;
+  }
+
+  .usuario-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .usuario-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .usuario-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+  }
+
+  .usuario-group input,
+  .usuario-group select {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .usuario-form-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .usuarios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .usuario-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+    position: relative;
+  }
+
+  .usuario-card h3 {
+    color: #111827;
+    margin-bottom: 10px;
+    padding-right: 80px;
+  }
+
+  .usuario-card p {
+    color: #4b5563;
+    margin-bottom: 7px;
+    font-size: 14px;
+  }
+
+  .usuario-estado {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .usuario-estado.activo {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .usuario-estado.inactivo {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .usuario-rol {
+    display: inline-block;
+    background: #fff7ed;
+    color: #c2410c;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .usuario-card-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .usuario-message-ok {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 12px;
+  }
+
+  .usuario-message-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 1100px) {
+    .usuarios-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 650px) {
+    .usuarios-grid,
+    .usuario-form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .usuarios-toolbar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .usuarios-search input {
+      min-width: 0;
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="usuarios-page">
+
+  <section class="usuarios-toolbar">
+    <div>
+      <h2>Módulo de usuarios</h2>
+      <p>
+        Administra cuentas, roles y estados de acceso al sistema.
+      </p>
+    </div>
+
+    <div class="usuarios-actions">
+      <button class="action-btn" id="btnMostrarFormUsuario">
+        Agregar usuario
+      </button>
+
+      <button class="action-btn" id="btnRecargarUsuarios">
+        Recargar
+      </button>
+    </div>
+  </section>
+
+  <section class="usuarios-search">
+    <input
+      type="text"
+      id="buscarUsuarioInput"
+      placeholder="Buscar por nombre, correo o rol..."
+    />
+
+    <select id="filtroRolUsuario">
+      <option value="">Todos los roles</option>
+      <option value="admin">Admin</option>
+      <option value="trabajador">Trabajador</option>
+      <option value="cliente">Cliente</option>
+    </select>
+
+    <select id="filtroEstadoUsuario">
+      <option value="">Todos</option>
+      <option value="activo">Activos</option>
+      <option value="inactivo">Inactivos</option>
+    </select>
+  </section>
+
+  <section class="usuario-form-box" id="formUsuarioBox">
+    <h2 id="formUsuarioTitulo">
+      Registrar usuario
+    </h2>
+
+    <div class="usuario-form-grid">
+
+      <div class="usuario-group">
+        <label for="usuarioNombreForm">Nombre</label>
+        <input type="text" id="usuarioNombreForm" placeholder="Ej. Administrador" />
+      </div>
+
+      <div class="usuario-group">
+        <label for="usuarioEmailForm">Correo</label>
+        <input type="email" id="usuarioEmailForm" placeholder="Ej. admin@ucss.edu.pe" />
+      </div>
+
+      <div class="usuario-group">
+        <label for="usuarioPasswordForm">Contraseña</label>
+        <input type="password" id="usuarioPasswordForm" placeholder="Dejar vacío si no cambia" />
+      </div>
+
+      <div class="usuario-group">
+        <label for="usuarioRolForm">Rol</label>
+        <select id="usuarioRolForm">
+          <option value="admin">Admin</option>
+          <option value="trabajador">Trabajador</option>
+          <option value="cliente">Cliente</option>
+        </select>
+      </div>
+
+      <div class="usuario-group">
+        <label for="usuarioEstadoForm">Estado</label>
+        <select id="usuarioEstadoForm">
+          <option value="true">Activo</option>
+          <option value="false">Inactivo</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="usuario-form-actions">
+      <button class="action-btn" id="btnGuardarUsuario">
+        Guardar usuario
+      </button>
+
+      <button class="action-btn danger" id="btnCancelarUsuario">
+        Cancelar
+      </button>
+    </div>
+
+    <div id="mensajeUsuario"></div>
+  </section>
+
+  <section class="usuarios-list-box">
+    <h2>Listado de usuarios</h2>
+
+    <div id="listaUsuarios" class="usuarios-grid">
+      <div class="card">
+        <h2>Cargando usuarios...</h2>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const btnMostrarForm = document.getElementById("btnMostrarFormUsuario");
+  const btnGuardar = document.getElementById("btnGuardarUsuario");
+  const btnCancelar = document.getElementById("btnCancelarUsuario");
+  const btnRecargar = document.getElementById("btnRecargarUsuarios");
+
+  const formBox = document.getElementById("formUsuarioBox");
+  const listaUsuarios = document.getElementById("listaUsuarios");
+  const mensajeUsuario = document.getElementById("mensajeUsuario");
+
+  const buscarInput = document.getElementById("buscarUsuarioInput");
+  const filtroRol = document.getElementById("filtroRolUsuario");
+  const filtroEstado = document.getElementById("filtroEstadoUsuario");
+
+  let usuariosCache = [];
+  let usuarioEditandoId = null;
+  let usuarioEditandoFecha = null;
+
+  function mostrarMensaje(texto, tipo = "ok") {
+    mensajeUsuario.innerHTML = `
+      <div class="${tipo === "ok" ? "usuario-message-ok" : "usuario-message-error"}">
+        ${texto}
+      </div>
+    `;
+  }
+
+  function limpiarMensaje() {
+    mensajeUsuario.innerHTML = "";
+  }
+
+  function limpiarFormulario() {
+    document.getElementById("usuarioNombreForm").value = "";
+    document.getElementById("usuarioEmailForm").value = "";
+    document.getElementById("usuarioPasswordForm").value = "";
+    document.getElementById("usuarioRolForm").value = "cliente";
+    document.getElementById("usuarioEstadoForm").value = "true";
+
+    usuarioEditandoId = null;
+    usuarioEditandoFecha = null;
+
+    document.getElementById("formUsuarioTitulo").textContent =
+      "Registrar usuario";
+  }
+
+  function obtenerDatosFormulario() {
+    return {
+      nombre: document.getElementById("usuarioNombreForm").value,
+      email: document.getElementById("usuarioEmailForm").value,
+      password: document.getElementById("usuarioPasswordForm").value,
+      rol: document.getElementById("usuarioRolForm").value,
+      estado: document.getElementById("usuarioEstadoForm").value === "true",
+      fechaRegistro: usuarioEditandoFecha || ""
+    };
+  }
+
+  async function cargarUsuarios() {
+    listaUsuarios.innerHTML = `
+      <div class="card">
+        <h2>Cargando usuarios...</h2>
+        <p>Consultando información desde MongoDB Atlas.</p>
+      </div>
+    `;
+
+    try {
+      const response = await fetch("/api/v1/usuarios");
+      const data = await response.json();
+
+      if (!data.ok) {
+        listaUsuarios.innerHTML = `
+          <div class="card">
+            <h2>Error</h2>
+            <p>${data.message || "No se pudieron cargar los usuarios."}</p>
+          </div>
+        `;
+        return;
+      }
+
+      usuariosCache = data.usuarios || [];
+
+      aplicarFiltros();
+
+    } catch (error) {
+      listaUsuarios.innerHTML = `
+        <div class="card">
+          <h2>Error de conexión</h2>
+          <p>No se pudo conectar con la API de usuarios.</p>
+        </div>
+      `;
+    }
+  }
+
+  function aplicarFiltros() {
+    const texto = buscarInput.value.toLowerCase().trim();
+    const rolFiltro = filtroRol.value;
+    const estadoFiltro = filtroEstado.value;
+
+    let usuarios = [...usuariosCache];
+
+    if (rolFiltro) {
+      usuarios = usuarios.filter((usuario) => usuario.rol === rolFiltro);
+    }
+
+    if (estadoFiltro === "activo") {
+      usuarios = usuarios.filter((usuario) => usuario.estado === true);
+    }
+
+    if (estadoFiltro === "inactivo") {
+      usuarios = usuarios.filter((usuario) => usuario.estado === false);
+    }
+
+    if (texto) {
+      usuarios = usuarios.filter((usuario) => {
+        return (
+          (usuario.nombre || "").toLowerCase().includes(texto) ||
+          (usuario.email || "").toLowerCase().includes(texto) ||
+          (usuario.rol || "").toLowerCase().includes(texto)
+        );
+      });
+    }
+
+    renderizarUsuarios(usuarios);
+  }
+
+  function renderizarUsuarios(usuarios) {
+    if (usuarios.length === 0) {
+      listaUsuarios.innerHTML = `
+        <div class="card">
+          <h2>Sin usuarios</h2>
+          <p>No hay usuarios que coincidan con la búsqueda.</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = "";
+
+    usuarios.forEach((usuario) => {
+      const estadoTexto = usuario.estado ? "Activo" : "Inactivo";
+      const estadoClase = usuario.estado ? "activo" : "inactivo";
+
+      html += `
+        <div class="usuario-card">
+          <span class="usuario-estado ${estadoClase}">
+            ${estadoTexto}
+          </span>
+
+          <span class="usuario-rol">
+            ${usuario.rol}
+          </span>
+
+          <h3>${usuario.nombre || "Usuario sin nombre"}</h3>
+
+          <p><strong>Correo:</strong> ${usuario.email}</p>
+          <p><strong>Rol:</strong> ${usuario.rol}</p>
+          <p><strong>Fecha registro:</strong> ${usuario.fechaRegistro || "No registrada"}</p>
+
+          <div class="usuario-card-actions">
+            <button class="action-btn btnEditarUsuario" data-id="${usuario.id}">
+              Editar
+            </button>
+
+            <button class="action-btn ${usuario.estado ? "danger" : ""} btnCambiarEstadoUsuario" data-id="${usuario.id}">
+              ${usuario.estado ? "Desactivar" : "Activar"}
+            </button>
+          </div>
+        </div>
+      `;
+    });
+
+    listaUsuarios.innerHTML = html;
+
+    document.querySelectorAll(".btnEditarUsuario").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const usuario = obtenerUsuarioPorId(btn.getAttribute("data-id"));
+        cargarUsuarioEnFormulario(usuario);
+      });
+    });
+
+    document.querySelectorAll(".btnCambiarEstadoUsuario").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const usuario = obtenerUsuarioPorId(btn.getAttribute("data-id"));
+        cambiarEstadoUsuario(usuario);
+      });
+    });
+  }
+
+  function obtenerUsuarioPorId(id) {
+    return usuariosCache.find((usuario) => usuario.id === id);
+  }
+
+  function cargarUsuarioEnFormulario(usuario) {
+    if (!usuario) return;
+
+    usuarioEditandoId = usuario.id;
+    usuarioEditandoFecha = usuario.fechaRegistro || "";
+
+    document.getElementById("formUsuarioTitulo").textContent =
+      "Editar usuario";
+
+    document.getElementById("usuarioNombreForm").value = usuario.nombre || "";
+    document.getElementById("usuarioEmailForm").value = usuario.email || "";
+    document.getElementById("usuarioPasswordForm").value = "";
+    document.getElementById("usuarioRolForm").value = usuario.rol || "cliente";
+    document.getElementById("usuarioEstadoForm").value = usuario.estado ? "true" : "false";
+
+    formBox.classList.add("open");
+
+    formBox.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  async function guardarUsuario() {
+    limpiarMensaje();
+
+    const datos = obtenerDatosFormulario();
+
+    const esEdicion = usuarioEditandoId !== null;
+
+    const url = esEdicion
+      ? `/api/v1/usuarios/${usuarioEditandoId}`
+      : "/api/v1/usuarios";
+
+    const metodo = esEdicion ? "PUT" : "POST";
+
+    try {
+      const response = await fetch(url, {
+        method: metodo,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datos)
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        mostrarMensaje(
+          data.message || "No se pudo guardar el usuario.",
+          "error"
+        );
+        return;
+      }
+
+      mostrarMensaje(
+        esEdicion
+          ? "Usuario actualizado correctamente."
+          : "Usuario registrado correctamente."
+      );
+
+      limpiarFormulario();
+      formBox.classList.remove("open");
+
+      await cargarUsuarios();
+
+    } catch (error) {
+      mostrarMensaje("Error de conexión con el servidor.", "error");
+    }
+  }
+
+  async function cambiarEstadoUsuario(usuario) {
+    if (!usuario) return;
+
+    const nuevoEstado = !usuario.estado;
+
+    const confirmar = confirm(
+      nuevoEstado
+        ? "¿Deseas activar este usuario?"
+        : "¿Deseas desactivar este usuario?"
+    );
+
+    if (!confirmar) return;
+
+    const datos = {
+      nombre: usuario.nombre,
+      email: usuario.email,
+      password: "",
+      rol: usuario.rol,
+      estado: nuevoEstado,
+      fechaRegistro: usuario.fechaRegistro
+    };
+
+    try {
+      const response = await fetch(`/api/v1/usuarios/${usuario.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datos)
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        alert(data.message || "No se pudo cambiar el estado del usuario.");
+        return;
+      }
+
+      await cargarUsuarios();
+
+    } catch (error) {
+      alert("Error de conexión con el servidor.");
+    }
+  }
+
+  btnMostrarForm.addEventListener("click", () => {
+    formBox.classList.toggle("open");
+
+    if (!formBox.classList.contains("open")) {
+      limpiarFormulario();
+      limpiarMensaje();
+    }
+  });
+
+  btnCancelar.addEventListener("click", () => {
+    limpiarFormulario();
+    limpiarMensaje();
+    formBox.classList.remove("open");
+  });
+
+  btnGuardar.addEventListener("click", guardarUsuario);
+  btnRecargar.addEventListener("click", cargarUsuarios);
+
+  buscarInput.addEventListener("input", aplicarFiltros);
+  filtroRol.addEventListener("change", aplicarFiltros);
+  filtroEstado.addEventListener("change", aplicarFiltros);
+
+  cargarUsuarios();
+})();
+</script>

@@ -1,0 +1,666 @@
+<!--htmlhint doctype-first:false -->
+
+<style>
+  .proveedores-page {
+    display: grid;
+    gap: 20px;
+  }
+
+  .proveedores-toolbar,
+  .proveedor-form-box,
+  .proveedores-list-box {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  }
+
+  .proveedores-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .proveedores-toolbar h2,
+  .proveedor-form-box h2,
+  .proveedores-list-box h2 {
+    color: #111827;
+    margin-bottom: 6px;
+  }
+
+  .proveedores-toolbar p {
+    color: #6b7280;
+  }
+
+  .proveedores-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .proveedores-search {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .proveedores-search input,
+  .proveedores-search select {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .proveedores-search input {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .proveedores-search input:focus,
+  .proveedores-search select:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12);
+  }
+
+  .proveedor-form-box {
+    display: none;
+  }
+
+  .proveedor-form-box.open {
+    display: block;
+  }
+
+  .proveedor-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .proveedor-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .proveedor-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+  }
+
+  .proveedor-group input,
+  .proveedor-group select {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .proveedor-group input:focus,
+  .proveedor-group select:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12);
+  }
+
+  .proveedor-form-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .proveedores-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .proveedor-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+    position: relative;
+  }
+
+  .proveedor-card h3 {
+    color: #111827;
+    margin-bottom: 10px;
+    padding-right: 80px;
+  }
+
+  .proveedor-card p {
+    color: #4b5563;
+    margin-bottom: 7px;
+    font-size: 14px;
+  }
+
+  .proveedor-estado {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .proveedor-estado.activo {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .proveedor-estado.inactivo {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .proveedor-card-actions {
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .proveedor-message-ok {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 12px;
+  }
+
+  .proveedor-message-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 1100px) {
+    .proveedores-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 650px) {
+    .proveedor-form-grid,
+    .proveedores-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .proveedores-toolbar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .proveedores-search input {
+      min-width: 0;
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="proveedores-page">
+
+  <section class="proveedores-toolbar">
+    <div>
+      <h2>Módulo de proveedores</h2>
+      <p id="descripcionProveedores">
+        Consulta y administra los proveedores registrados en la tienda.
+      </p>
+    </div>
+
+    <div class="proveedores-actions">
+      <button class="action-btn" id="btnMostrarFormProveedor">
+        Agregar proveedor
+      </button>
+
+      <button class="action-btn" id="btnRecargarProveedores">
+        Recargar
+      </button>
+    </div>
+  </section>
+
+  <section class="proveedores-search">
+    <input
+      type="text"
+      id="buscarProveedorInput"
+      placeholder="Buscar por nombre, teléfono, dirección o correo..."
+    />
+
+    <select id="filtroEstadoProveedor">
+      <option value="">Todos</option>
+      <option value="activo">Activos</option>
+      <option value="inactivo">Inactivos</option>
+    </select>
+  </section>
+
+  <section class="proveedor-form-box" id="formProveedorBox">
+    <h2 id="formProveedorTitulo">
+      Registrar proveedor
+    </h2>
+
+    <div class="proveedor-form-grid">
+
+      <div class="proveedor-group">
+        <label for="proveedorNombre">Nombre</label>
+        <input type="text" id="proveedorNombre" placeholder="Ej. Distribuidora Centro" />
+      </div>
+
+      <div class="proveedor-group">
+        <label for="proveedorTelefono">Teléfono</label>
+        <input type="text" id="proveedorTelefono" placeholder="Ej. 999888777" />
+      </div>
+
+      <div class="proveedor-group">
+        <label for="proveedorDireccion">Dirección</label>
+        <input type="text" id="proveedorDireccion" placeholder="Ej. Huancayo" />
+      </div>
+
+      <div class="proveedor-group">
+        <label for="proveedorCorreo">Correo</label>
+        <input type="email" id="proveedorCorreo" placeholder="Ej. ventas@centro.com" />
+      </div>
+
+      <div class="proveedor-group">
+        <label for="proveedorEstado">Estado</label>
+        <select id="proveedorEstado">
+          <option value="true">Activo</option>
+          <option value="false">Inactivo</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="proveedor-form-actions">
+      <button class="action-btn" id="btnGuardarProveedor">
+        Guardar proveedor
+      </button>
+
+      <button class="action-btn danger" id="btnCancelarProveedor">
+        Cancelar
+      </button>
+    </div>
+
+    <div id="mensajeProveedor"></div>
+  </section>
+
+  <section class="proveedores-list-box">
+    <h2>Listado de proveedores</h2>
+
+    <div id="listaProveedores" class="proveedores-grid">
+      <div class="card">
+        <h2>Cargando proveedores...</h2>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const rolRaw = (document.getElementById("rolUsuario")?.value || "cliente")
+    .trim()
+    .toLowerCase();
+
+  const rolActual = rolRaw === "admin" ? "administrador" : rolRaw;
+
+  const btnMostrarForm = document.getElementById("btnMostrarFormProveedor");
+  const btnGuardar = document.getElementById("btnGuardarProveedor");
+  const btnCancelar = document.getElementById("btnCancelarProveedor");
+  const btnRecargar = document.getElementById("btnRecargarProveedores");
+
+  const formBox = document.getElementById("formProveedorBox");
+  const listaProveedores = document.getElementById("listaProveedores");
+  const mensajeProveedor = document.getElementById("mensajeProveedor");
+
+  const buscarInput = document.getElementById("buscarProveedorInput");
+  const filtroEstado = document.getElementById("filtroEstadoProveedor");
+  const descripcion = document.getElementById("descripcionProveedores");
+
+  let proveedoresCache = [];
+  let proveedorEditandoId = null;
+
+  function esAdministrador() {
+    return rolActual === "administrador";
+  }
+
+  function configurarVistaPorRol() {
+    if (!esAdministrador()) {
+      btnMostrarForm.style.display = "none";
+
+      descripcion.textContent =
+        "Consulta proveedores registrados. Solo el administrador puede agregar, editar o cambiar estado.";
+    }
+  }
+
+  function mostrarMensaje(texto, tipo = "ok") {
+    mensajeProveedor.innerHTML = `
+      <div class="${tipo === "ok" ? "proveedor-message-ok" : "proveedor-message-error"}">
+        ${texto}
+      </div>
+    `;
+  }
+
+  function limpiarMensaje() {
+    mensajeProveedor.innerHTML = "";
+  }
+
+  function limpiarFormulario() {
+    document.getElementById("proveedorNombre").value = "";
+    document.getElementById("proveedorTelefono").value = "";
+    document.getElementById("proveedorDireccion").value = "";
+    document.getElementById("proveedorCorreo").value = "";
+    document.getElementById("proveedorEstado").value = "true";
+
+    proveedorEditandoId = null;
+
+    document.getElementById("formProveedorTitulo").textContent =
+      "Registrar proveedor";
+  }
+
+  function obtenerDatosFormulario() {
+    return {
+      nombre: document.getElementById("proveedorNombre").value,
+      telefono: document.getElementById("proveedorTelefono").value,
+      direccion: document.getElementById("proveedorDireccion").value,
+      correo: document.getElementById("proveedorCorreo").value,
+      estado: document.getElementById("proveedorEstado").value === "true"
+    };
+  }
+
+  async function cargarProveedores() {
+    listaProveedores.innerHTML = `
+      <div class="card">
+        <h2>Cargando proveedores...</h2>
+        <p>Consultando información desde MongoDB Atlas.</p>
+      </div>
+    `;
+
+    try {
+      const response = await fetch("/api/v1/proveedores");
+      const data = await response.json();
+
+      if (!data.ok) {
+        listaProveedores.innerHTML = `
+          <div class="card">
+            <h2>Error</h2>
+            <p>${data.message || "No se pudieron cargar los proveedores."}</p>
+          </div>
+        `;
+        return;
+      }
+
+      proveedoresCache = data.proveedores || [];
+
+      aplicarFiltros();
+
+    } catch (error) {
+      listaProveedores.innerHTML = `
+        <div class="card">
+          <h2>Error de conexión</h2>
+          <p>No se pudo conectar con la API de proveedores.</p>
+        </div>
+      `;
+    }
+  }
+
+  function aplicarFiltros() {
+    const texto = buscarInput.value.toLowerCase().trim();
+    const estadoFiltro = filtroEstado.value;
+
+    let proveedores = [...proveedoresCache];
+
+    if (estadoFiltro === "activo") {
+      proveedores = proveedores.filter((p) => p.estado === true);
+    }
+
+    if (estadoFiltro === "inactivo") {
+      proveedores = proveedores.filter((p) => p.estado === false);
+    }
+
+    if (texto) {
+      proveedores = proveedores.filter((p) => {
+        return (
+          (p.nombre || "").toLowerCase().includes(texto) ||
+          (p.telefono || "").toLowerCase().includes(texto) ||
+          (p.direccion || "").toLowerCase().includes(texto) ||
+          (p.correo || "").toLowerCase().includes(texto)
+        );
+      });
+    }
+
+    renderizarProveedores(proveedores);
+  }
+
+  function renderizarProveedores(proveedores) {
+    if (proveedores.length === 0) {
+      listaProveedores.innerHTML = `
+        <div class="card">
+          <h2>Sin proveedores</h2>
+          <p>No hay proveedores que coincidan con la búsqueda.</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = "";
+
+    proveedores.forEach((proveedor) => {
+      const estadoTexto = proveedor.estado ? "Activo" : "Inactivo";
+      const estadoClase = proveedor.estado ? "activo" : "inactivo";
+
+      html += `
+        <div class="proveedor-card">
+          <span class="proveedor-estado ${estadoClase}">
+            ${estadoTexto}
+          </span>
+
+          <h3>${proveedor.nombre || "Proveedor sin nombre"}</h3>
+
+          <p><strong>Teléfono:</strong> ${proveedor.telefono || "No registrado"}</p>
+          <p><strong>Dirección:</strong> ${proveedor.direccion || "No registrada"}</p>
+          <p><strong>Correo:</strong> ${proveedor.correo || "No registrado"}</p>
+
+          <div class="proveedor-card-actions">
+            ${
+              esAdministrador()
+                ? `<button class="action-btn btnEditarProveedor"
+                    data-id="${proveedor.id}">
+                    Editar
+                  </button>`
+                : ""
+            }
+
+            ${
+              esAdministrador()
+                ? `<button class="action-btn ${proveedor.estado ? "danger" : ""} btnCambiarEstadoProveedor"
+                    data-id="${proveedor.id}">
+                    ${proveedor.estado ? "Desactivar" : "Activar"}
+                  </button>`
+                : ""
+            }
+          </div>
+        </div>
+      `;
+    });
+
+    listaProveedores.innerHTML = html;
+
+    document.querySelectorAll(".btnEditarProveedor").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const proveedor = obtenerProveedorPorId(btn.getAttribute("data-id"));
+        cargarProveedorEnFormulario(proveedor);
+      });
+    });
+
+    document.querySelectorAll(".btnCambiarEstadoProveedor").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const proveedor = obtenerProveedorPorId(btn.getAttribute("data-id"));
+        cambiarEstadoProveedor(proveedor);
+      });
+    });
+  }
+
+  function obtenerProveedorPorId(id) {
+    return proveedoresCache.find((proveedor) => proveedor.id === id);
+  }
+
+  function cargarProveedorEnFormulario(proveedor) {
+    if (!esAdministrador() || !proveedor) return;
+
+    proveedorEditandoId = proveedor.id;
+
+    document.getElementById("formProveedorTitulo").textContent =
+      "Editar proveedor";
+
+    document.getElementById("proveedorNombre").value = proveedor.nombre || "";
+    document.getElementById("proveedorTelefono").value = proveedor.telefono || "";
+    document.getElementById("proveedorDireccion").value = proveedor.direccion || "";
+    document.getElementById("proveedorCorreo").value = proveedor.correo || "";
+    document.getElementById("proveedorEstado").value = proveedor.estado ? "true" : "false";
+
+    formBox.classList.add("open");
+
+    formBox.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  async function guardarProveedor() {
+    limpiarMensaje();
+
+    if (!esAdministrador()) {
+      mostrarMensaje("Solo el administrador puede guardar proveedores.", "error");
+      return;
+    }
+
+    const datos = obtenerDatosFormulario();
+
+    const esEdicion = proveedorEditandoId !== null;
+
+    const url = esEdicion
+      ? `/api/v1/proveedores/${proveedorEditandoId}`
+      : "/api/v1/proveedores";
+
+    const metodo = esEdicion ? "PUT" : "POST";
+
+    try {
+      const response = await fetch(url, {
+        method: metodo,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datos)
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        mostrarMensaje(
+          data.message || "No se pudo guardar el proveedor.",
+          "error"
+        );
+        return;
+      }
+
+      mostrarMensaje(
+        esEdicion
+          ? "Proveedor actualizado correctamente."
+          : "Proveedor registrado correctamente."
+      );
+
+      limpiarFormulario();
+      formBox.classList.remove("open");
+
+      await cargarProveedores();
+
+    } catch (error) {
+      mostrarMensaje("Error de conexión con el servidor.", "error");
+    }
+  }
+
+  async function cambiarEstadoProveedor(proveedor) {
+    if (!esAdministrador() || !proveedor) return;
+
+    const nuevoEstado = !proveedor.estado;
+
+    const confirmar = confirm(
+      nuevoEstado
+        ? "¿Deseas activar este proveedor?"
+        : "¿Deseas desactivar este proveedor?"
+    );
+
+    if (!confirmar) return;
+
+    const datos = {
+      nombre: proveedor.nombre,
+      telefono: proveedor.telefono,
+      direccion: proveedor.direccion,
+      correo: proveedor.correo,
+      estado: nuevoEstado
+    };
+
+    try {
+      const response = await fetch(`/api/v1/proveedores/${proveedor.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datos)
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        alert(data.message || "No se pudo cambiar el estado del proveedor.");
+        return;
+      }
+
+      await cargarProveedores();
+
+    } catch (error) {
+      alert("Error de conexión con el servidor.");
+    }
+  }
+
+  btnMostrarForm.addEventListener("click", () => {
+    if (!esAdministrador()) return;
+
+    formBox.classList.toggle("open");
+
+    if (!formBox.classList.contains("open")) {
+      limpiarFormulario();
+      limpiarMensaje();
+    }
+  });
+
+  btnCancelar.addEventListener("click", () => {
+    limpiarFormulario();
+    limpiarMensaje();
+    formBox.classList.remove("open");
+  });
+
+  btnGuardar.addEventListener("click", guardarProveedor);
+
+  btnRecargar.addEventListener("click", cargarProveedores);
+
+  buscarInput.addEventListener("input", aplicarFiltros);
+
+  filtroEstado.addEventListener("change", aplicarFiltros);
+
+  configurarVistaPorRol();
+  cargarProveedores();
+})();
+</script>

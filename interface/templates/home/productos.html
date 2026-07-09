@@ -1,0 +1,1080 @@
+<!--htmlhint doctype-first:false -->
+
+<style>
+  .productos-page {
+    display: grid;
+    gap: 20px;
+  }
+
+  .productos-toolbar {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .productos-toolbar h2 {
+    color: #111827;
+    margin-bottom: 6px;
+  }
+
+  .productos-toolbar p {
+    color: #6b7280;
+  }
+
+  .productos-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .productos-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    background: white;
+    color: #111827;
+    border: 1px solid #e5e7eb;
+    padding: 11px 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+  .tab-btn.active,
+  .tab-btn:hover {
+    background: #ff6a00;
+    color: white;
+    border-color: #ff6a00;
+  }
+
+  .productos-search {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .productos-search input,
+  .productos-search select {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .productos-search input {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .productos-search input:focus,
+  .productos-search select:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12);
+  }
+
+  .producto-form-box {
+    display: none;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  }
+
+  .producto-form-box.open {
+    display: block;
+  }
+
+  .producto-form-box h2 {
+    margin-bottom: 14px;
+    color: #111827;
+  }
+
+  .producto-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .producto-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .producto-form-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+  }
+
+  .producto-form-group input,
+  .producto-form-group select {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .producto-form-group input:focus,
+  .producto-form-group select:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12);
+  }
+
+  .producto-form-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .productos-grid-view {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .producto-card-view {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+    position: relative;
+  }
+
+  .producto-card-view h3 {
+    color: #111827;
+    margin-bottom: 8px;
+    padding-right: 80px;
+  }
+
+  .producto-card-view p {
+    color: #4b5563;
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  .producto-badge {
+    display: inline-block;
+    background: #fff7ed;
+    color: #c2410c;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+
+  .producto-estado {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .producto-estado.activo {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .producto-estado.inactivo {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+
+  .producto-precio {
+    font-size: 24px;
+    font-weight: 800;
+    color: #ff6a00;
+    margin: 12px 0;
+  }
+
+  .producto-stock-alerta {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    padding: 9px;
+    border-radius: 10px;
+    margin: 10px 0;
+    font-size: 13px;
+  }
+
+  .producto-actions-card {
+    margin-top: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .mas-vendidos-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .mas-vendido-row {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+    display: grid;
+    grid-template-columns: 52px 1fr auto;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .mas-vendido-icon {
+    width: 48px;
+    height: 48px;
+    background: #fff7ed;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+  }
+
+  .mas-vendido-row h3 {
+    color: #111827;
+    margin-bottom: 4px;
+  }
+
+  .mas-vendido-row p {
+    color: #6b7280;
+    font-size: 13px;
+  }
+
+  .mas-vendido-numero {
+    text-align: right;
+  }
+
+  .mas-vendido-numero strong {
+    display: block;
+    color: #ff6a00;
+    font-size: 24px;
+  }
+
+  .mas-vendido-numero span {
+    color: #6b7280;
+    font-size: 12px;
+  }
+
+  .producto-status-message {
+    margin-top: 12px;
+  }
+
+  .producto-message-ok {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .producto-message-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  @media (max-width: 1100px) {
+    .productos-grid-view {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .producto-form-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 650px) {
+    .productos-toolbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .productos-grid-view,
+    .producto-form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .mas-vendido-row {
+      grid-template-columns: 48px 1fr;
+    }
+
+    .mas-vendido-numero {
+      grid-column: 1 / -1;
+      text-align: left;
+    }
+  }
+</style>
+
+<div class="productos-page">
+
+  <section class="productos-toolbar">
+    <div>
+      <h2>Módulo de productos</h2>
+      <p id="descripcionProductos">
+        Administra, consulta y controla los productos de la tienda.
+      </p>
+    </div>
+
+    <div class="productos-actions">
+      <button class="action-btn" id="btnVerProductos">
+        Ver productos
+      </button>
+
+      <button class="action-btn" id="btnVerMasVendidos">
+        Más vendidos
+      </button>
+
+      <button class="action-btn" id="btnMostrarFormProducto">
+        Agregar producto
+      </button>
+    </div>
+  </section>
+
+  <section class="productos-tabs">
+    <button class="tab-btn active" id="tabTodos">
+      Todos
+    </button>
+
+    <button class="tab-btn" id="tabBajoStock">
+      Bajo stock
+    </button>
+
+    <button class="tab-btn" id="tabActivos">
+      Activos
+    </button>
+  </section>
+
+  <section class="productos-search">
+    <input
+      type="text"
+      id="buscarProductoInput"
+      placeholder="Buscar por nombre, categoría o marca..."
+    />
+
+    <select id="filtroCategoria">
+      <option value="">Todas las categorías</option>
+    </select>
+
+    <button class="action-btn" id="btnRecargarProductos">
+      Recargar
+    </button>
+  </section>
+
+  <section class="producto-form-box" id="formProductoBox">
+    <h2 id="formProductoTitulo">
+      Registrar producto
+    </h2>
+
+    <div class="producto-form-grid">
+
+      <div class="producto-form-group">
+        <label for="productoNombre">Nombre</label>
+        <input type="text" id="productoNombre" placeholder="Ej. Arroz Costeño" />
+      </div>
+
+      <div class="producto-form-group">
+        <label for="productoCategoria">Categoría</label>
+        <input type="text" id="productoCategoria" placeholder="Ej. Abarrotes" />
+      </div>
+
+      <div class="producto-form-group">
+        <label for="productoMarca">Marca</label>
+        <input type="text" id="productoMarca" placeholder="Ej. Costeño" />
+      </div>
+
+      <div class="producto-form-group">
+        <label for="productoPrecioCompra">Precio compra</label>
+        <input type="number" id="productoPrecioCompra" step="0.10" placeholder="Ej. 3.80" />
+      </div>
+
+      <div class="producto-form-group">
+        <label for="productoPrecioVenta">Precio venta</label>
+        <input type="number" id="productoPrecioVenta" step="0.10" placeholder="Ej. 4.50" />
+      </div>
+
+      <div class="producto-form-group">
+        <label for="productoStock">Stock</label>
+        <input type="number" id="productoStock" placeholder="Ej. 50" />
+      </div>
+
+      <div class="producto-form-group">
+        <label for="productoStockMinimo">Stock mínimo</label>
+        <input type="number" id="productoStockMinimo" placeholder="Ej. 10" />
+      </div>
+
+      <div class="producto-form-group">
+        <label for="productoUnidadMedida">Unidad de medida</label>
+        <select id="productoUnidadMedida">
+          <option value="unidad">unidad</option>
+          <option value="kg">kg</option>
+          <option value="litro">litro</option>
+          <option value="paquete">paquete</option>
+          <option value="caja">caja</option>
+        </select>
+      </div>
+
+      <div class="producto-form-group">
+        <label for="productoEstado">Estado</label>
+        <select id="productoEstado">
+          <option value="true">Activo</option>
+          <option value="false">Inactivo</option>
+        </select>
+      </div>
+
+      <div class="producto-form-group">
+        <label for="productoProveedorId">Proveedor ID</label>
+        <input
+          type="text"
+          id="productoProveedorId"
+          placeholder="Ej. 6a316216041b0268c9e8c5e7"
+        />
+      </div>
+
+    </div>
+
+    <div class="producto-form-actions">
+      <button class="action-btn" id="btnGuardarProducto">
+        Guardar producto
+      </button>
+
+      <button class="action-btn danger" id="btnCancelarProducto">
+        Cancelar
+      </button>
+    </div>
+
+    <div id="mensajeProducto" class="producto-status-message"></div>
+  </section>
+
+  <section id="seccionProductos">
+    <div id="listaProductos" class="productos-grid-view">
+      <div class="card">
+        <h2>Cargando productos...</h2>
+      </div>
+    </div>
+  </section>
+
+  <section id="seccionMasVendidos" style="display: none;">
+    <div class="panel-card">
+      <div class="panel-header">
+        <h2>Productos más vendidos</h2>
+        <span class="mini-text">
+          Resumen destacado para el panel de inicio
+        </span>
+      </div>
+
+      <div id="listaMasVendidos" class="mas-vendidos-list"></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const rolRaw = (document.getElementById("rolUsuario")?.value || "cliente")
+    .trim()
+    .toLowerCase();
+
+  const rolActual = rolRaw === "admin" ? "administrador" : rolRaw;
+
+  const btnVerProductos = document.getElementById("btnVerProductos");
+  const btnVerMasVendidos = document.getElementById("btnVerMasVendidos");
+  const btnMostrarForm = document.getElementById("btnMostrarFormProducto");
+  const btnGuardar = document.getElementById("btnGuardarProducto");
+  const btnCancelar = document.getElementById("btnCancelarProducto");
+  const btnRecargar = document.getElementById("btnRecargarProductos");
+
+  const tabTodos = document.getElementById("tabTodos");
+  const tabBajoStock = document.getElementById("tabBajoStock");
+  const tabActivos = document.getElementById("tabActivos");
+
+  const formBox = document.getElementById("formProductoBox");
+  const listaProductos = document.getElementById("listaProductos");
+  const listaMasVendidos = document.getElementById("listaMasVendidos");
+  const mensajeProducto = document.getElementById("mensajeProducto");
+  const buscarInput = document.getElementById("buscarProductoInput");
+  const filtroCategoria = document.getElementById("filtroCategoria");
+  const descripcion = document.getElementById("descripcionProductos");
+
+  const seccionProductos = document.getElementById("seccionProductos");
+  const seccionMasVendidos = document.getElementById("seccionMasVendidos");
+
+  let productosCache = [];
+  let filtroActual = "todos";
+  let productoEditandoId = null;
+
+  function puedeGestionar() {
+    return rolActual === "administrador" || rolActual === "trabajador";
+  }
+
+  function puedeEliminar() {
+    return rolActual === "administrador";
+  }
+
+  function configurarVistaPorRol() {
+    if (rolActual === "cliente") {
+      btnMostrarForm.style.display = "none";
+
+      descripcion.textContent =
+        "Consulta productos disponibles y agrégalos al carrito de compra.";
+    }
+
+    if (rolActual === "trabajador") {
+      descripcion.textContent =
+        "Consulta productos, registra productos nuevos y controla el inventario.";
+    }
+
+    if (rolActual === "administrador") {
+      descripcion.textContent =
+        "Administra productos, inventario, precios y estado de cada producto.";
+    }
+  }
+
+  function mostrarMensaje(texto, tipo = "ok") {
+    mensajeProducto.innerHTML = `
+      <div class="${tipo === "ok" ? "producto-message-ok" : "producto-message-error"}">
+        ${texto}
+      </div>
+    `;
+  }
+
+  function limpiarMensaje() {
+    mensajeProducto.innerHTML = "";
+  }
+
+  function limpiarFormulario() {
+    document.getElementById("productoNombre").value = "";
+    document.getElementById("productoCategoria").value = "";
+    document.getElementById("productoMarca").value = "";
+    document.getElementById("productoPrecioCompra").value = "";
+    document.getElementById("productoPrecioVenta").value = "";
+    document.getElementById("productoStock").value = "";
+    document.getElementById("productoStockMinimo").value = "";
+    document.getElementById("productoUnidadMedida").value = "unidad";
+    document.getElementById("productoEstado").value = "true";
+    document.getElementById("productoProveedorId").value = "";
+
+    productoEditandoId = null;
+
+    document.getElementById("formProductoTitulo").textContent =
+      "Registrar producto";
+  }
+
+  function obtenerDatosFormulario() {
+    const stock = Number(document.getElementById("productoStock").value);
+
+    return {
+      nombre: document.getElementById("productoNombre").value,
+      categoria: document.getElementById("productoCategoria").value,
+      marca: document.getElementById("productoMarca").value,
+      precioCompra: document.getElementById("productoPrecioCompra").value,
+      precioVenta: document.getElementById("productoPrecioVenta").value,
+      stock: document.getElementById("productoStock").value,
+      stockMinimo: document.getElementById("productoStockMinimo").value,
+      unidadMedida: document.getElementById("productoUnidadMedida").value,
+      estado: stock === 0
+        ? false
+        : document.getElementById("productoEstado").value === "true",
+      proveedorId: document.getElementById("productoProveedorId").value
+    };
+  }
+
+  async function cargarProductos() {
+    listaProductos.innerHTML = `
+      <div class="card">
+        <h2>Cargando productos...</h2>
+        <p>Consultando información desde MongoDB Atlas.</p>
+      </div>
+    `;
+
+    try {
+      const response = await fetch("/api/v1/productos");
+      const data = await response.json();
+
+      if (!data.ok) {
+        listaProductos.innerHTML = `
+          <div class="card">
+            <h2>Error</h2>
+            <p>${data.message || "No se pudieron cargar los productos."}</p>
+          </div>
+        `;
+        return;
+      }
+
+      productosCache = data.productos || [];
+
+      cargarCategorias();
+      aplicarFiltros();
+      renderizarMasVendidos();
+
+    } catch (error) {
+      listaProductos.innerHTML = `
+        <div class="card">
+          <h2>Error de conexión</h2>
+          <p>No se pudo conectar con el servidor.</p>
+        </div>
+      `;
+    }
+  }
+
+  function cargarCategorias() {
+    const categorias = [
+      ...new Set(
+        productosCache
+          .map((producto) => producto.categoria)
+          .filter(Boolean)
+      )
+    ];
+
+    const valorActual = filtroCategoria.value;
+
+    filtroCategoria.innerHTML = `
+      <option value="">Todas las categorías</option>
+    `;
+
+    categorias.forEach((categoria) => {
+      filtroCategoria.innerHTML += `
+        <option value="${categoria}">
+          ${categoria}
+        </option>
+      `;
+    });
+
+    filtroCategoria.value = valorActual;
+  }
+
+  function aplicarFiltros() {
+    const texto = buscarInput.value.toLowerCase().trim();
+    const categoriaSeleccionada = filtroCategoria.value;
+
+    let productos = [...productosCache];
+
+    if (filtroActual === "bajo-stock") {
+      productos = productos.filter((producto) => {
+        return Number(producto.stock) <= Number(producto.stockMinimo);
+      });
+    }
+
+    if (filtroActual === "activos") {
+      productos = productos.filter((producto) => {
+        const estadoReal = Number(producto.stock) <= 0 ? false : producto.estado;
+        return estadoReal === true;
+      });
+    }
+
+    if (categoriaSeleccionada) {
+      productos = productos.filter((producto) => {
+        return producto.categoria === categoriaSeleccionada;
+      });
+    }
+
+    if (texto) {
+      productos = productos.filter((producto) => {
+        return (
+          (producto.nombre || "").toLowerCase().includes(texto) ||
+          (producto.categoria || "").toLowerCase().includes(texto) ||
+          (producto.marca || "").toLowerCase().includes(texto)
+        );
+      });
+    }
+
+    renderizarProductos(productos);
+  }
+
+  function renderizarProductos(productos) {
+    if (productos.length === 0) {
+      listaProductos.innerHTML = `
+        <div class="card">
+          <h2>Sin productos</h2>
+          <p>No hay productos que coincidan con la búsqueda o filtro seleccionado.</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = "";
+
+    productos.forEach((producto) => {
+      const estadoReal = Number(producto.stock) <= 0 ? false : producto.estado;
+      const estadoTexto = estadoReal ? "Activo" : "Inactivo";
+      const estadoClase = estadoReal ? "activo" : "inactivo";
+      const bajoStock = Number(producto.stock) <= Number(producto.stockMinimo);
+
+      html += `
+        <div class="producto-card-view">
+          <span class="producto-estado ${estadoClase}">
+            ${estadoTexto}
+          </span>
+
+          <span class="producto-badge">
+            ${producto.categoria || "Sin categoría"}
+          </span>
+
+          <h3>${producto.nombre || "Producto sin nombre"}</h3>
+
+          <p><strong>Marca:</strong> ${producto.marca || "Sin marca"}</p>
+          <p><strong>Unidad:</strong> ${producto.unidadMedida || "unidad"}</p>
+          <p><strong>Stock:</strong> ${producto.stock} ${producto.unidadMedida || "unidades"}</p>
+          <p><strong>Stock mínimo:</strong> ${producto.stockMinimo}</p>
+
+          ${
+            puedeGestionar()
+              ? `<p><strong>Precio compra:</strong> S/ ${Number(producto.precioCompra || 0).toFixed(2)}</p>`
+              : ""
+          }
+
+          <div class="producto-precio">
+            S/ ${Number(producto.precioVenta || 0).toFixed(2)}
+          </div>
+
+          ${
+            bajoStock
+              ? `<div class="producto-stock-alerta">
+                  ⚠ Producto con bajo stock.
+                </div>`
+              : ""
+          }
+
+          ${
+            Number(producto.stock) <= 0
+              ? `<div class="producto-stock-alerta">
+                  ⛔ Producto sin stock. Debe pasar a inactivo.
+                </div>`
+              : ""
+          }
+
+          <div class="producto-actions-card">
+            ${
+              rolActual === "cliente"
+                ? `<button class="action-btn btnAgregarCarrito"
+                    data-id="${producto.id}">
+                    Agregar al carrito
+                  </button>`
+                : `<button class="action-btn btnEditarProducto"
+                    data-id="${producto.id}">
+                    Editar
+                  </button>`
+            }
+
+            ${
+              puedeEliminar()
+                ? `<button class="action-btn danger btnEliminarProducto"
+                    data-id="${producto.id}">
+                    Eliminar
+                  </button>`
+                : ""
+            }
+          </div>
+        </div>
+      `;
+    });
+
+    listaProductos.innerHTML = html;
+
+    document.querySelectorAll(".btnAgregarCarrito").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const producto = obtenerProductoPorId(btn.getAttribute("data-id"));
+        agregarAlCarrito(producto);
+      });
+    });
+
+    document.querySelectorAll(".btnEditarProducto").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const producto = obtenerProductoPorId(btn.getAttribute("data-id"));
+        cargarProductoEnFormulario(producto);
+      });
+    });
+
+    document.querySelectorAll(".btnEliminarProducto").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        eliminarProducto(btn.getAttribute("data-id"));
+      });
+    });
+  }
+
+  function obtenerProductoPorId(id) {
+    return productosCache.find((producto) => producto.id === id);
+  }
+
+  function cargarProductoEnFormulario(producto) {
+    if (!puedeGestionar() || !producto) return;
+
+    productoEditandoId = producto.id;
+
+    document.getElementById("formProductoTitulo").textContent =
+      "Editar producto";
+
+    document.getElementById("productoNombre").value = producto.nombre || "";
+    document.getElementById("productoCategoria").value = producto.categoria || "";
+    document.getElementById("productoMarca").value = producto.marca || "";
+    document.getElementById("productoPrecioCompra").value = producto.precioCompra || "";
+    document.getElementById("productoPrecioVenta").value = producto.precioVenta || "";
+    document.getElementById("productoStock").value = producto.stock || 0;
+    document.getElementById("productoStockMinimo").value = producto.stockMinimo || 0;
+    document.getElementById("productoUnidadMedida").value = producto.unidadMedida || "unidad";
+    document.getElementById("productoEstado").value = producto.estado ? "true" : "false";
+    document.getElementById("productoProveedorId").value = producto.proveedorId || "";
+
+    formBox.classList.add("open");
+
+    formBox.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  function renderizarMasVendidos() {
+    const productosBase = productosCache.slice(0, 5);
+
+    const productosVendidos = productosBase.map((producto, index) => {
+      const vendidosSimulados = [120, 98, 85, 74, 66];
+
+      return {
+        ...producto,
+        vendidos: producto.vendidos || producto.unidadesVendidas || vendidosSimulados[index] || 20
+      };
+    });
+
+    if (productosVendidos.length === 0) {
+      listaMasVendidos.innerHTML = `
+        <div class="card">
+          <h2>Sin información</h2>
+          <p>No hay productos para mostrar en más vendidos.</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = "";
+
+    productosVendidos.forEach((producto) => {
+      html += `
+        <div class="mas-vendido-row">
+          <div class="mas-vendido-icon">
+            ${obtenerIconoProducto(producto.categoria)}
+          </div>
+
+          <div>
+            <h3>${producto.nombre}</h3>
+            <p>${producto.categoria || "Sin categoría"} · ${producto.marca || "Sin marca"}</p>
+            <p>Precio venta: S/ ${Number(producto.precioVenta || 0).toFixed(2)}</p>
+          </div>
+
+          <div class="mas-vendido-numero">
+            <strong>${producto.vendidos}</strong>
+            <span>unidades</span>
+          </div>
+        </div>
+      `;
+    });
+
+    listaMasVendidos.innerHTML = html;
+  }
+
+  function obtenerIconoProducto(categoria) {
+    const texto = (categoria || "").toLowerCase();
+
+    if (texto.includes("abarrote")) return "🍚";
+    if (texto.includes("lácteo") || texto.includes("lacteo")) return "🥛";
+    if (texto.includes("bebida")) return "🥤";
+    if (texto.includes("limpieza")) return "🧼";
+    if (texto.includes("aceite")) return "🛢️";
+
+    return "📦";
+  }
+
+  async function guardarProducto() {
+    limpiarMensaje();
+
+    if (!puedeGestionar()) {
+      mostrarMensaje("No tienes permiso para guardar productos.", "error");
+      return;
+    }
+
+    const datos = obtenerDatosFormulario();
+
+    const esEdicion = productoEditandoId !== null;
+
+    const url = esEdicion
+      ? `/api/v1/productos/${productoEditandoId}`
+      : "/api/v1/productos";
+
+    const metodo = esEdicion ? "PUT" : "POST";
+
+    try {
+      const response = await fetch(url, {
+        method: metodo,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(datos)
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        mostrarMensaje(
+          data.message || "No se pudo guardar el producto.",
+          "error"
+        );
+        return;
+      }
+
+      mostrarMensaje(
+        esEdicion
+          ? "Producto actualizado correctamente."
+          : "Producto registrado correctamente."
+      );
+
+      limpiarFormulario();
+      formBox.classList.remove("open");
+
+      await cargarProductos();
+
+    } catch (error) {
+      mostrarMensaje("Error de conexión con el servidor.", "error");
+    }
+  }
+
+  async function eliminarProducto(id) {
+    if (!puedeEliminar()) {
+      alert("Solo el administrador puede eliminar productos.");
+      return;
+    }
+
+    const confirmar = confirm("¿Seguro que deseas eliminar este producto?");
+
+    if (!confirmar) return;
+
+    try {
+      const response = await fetch(`/api/v1/productos/${id}`, {
+        method: "DELETE"
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        alert(data.message || "No se pudo eliminar el producto.");
+        return;
+      }
+
+      cargarProductos();
+
+    } catch (error) {
+      alert("Error de conexión con el servidor.");
+    }
+  }
+
+  function agregarAlCarrito(producto) {
+    if (!producto) return;
+
+    if (Number(producto.stock) <= 0 || producto.estado === false) {
+      alert("Este producto no está disponible para compra.");
+      return;
+    }
+
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+    const existente = carrito.find((item) => item.id === producto.id);
+
+    if (existente) {
+      existente.cantidad += 1;
+    } else {
+      carrito.push({
+        ...producto,
+        cantidad: 1
+      });
+    }
+
+    localStorage.setItem("carrito", JSON.stringify(carrito));
+
+    alert("Producto agregado al carrito.");
+  }
+
+  function activarTab(tabActivo, filtro) {
+    filtroActual = filtro;
+
+    document.querySelectorAll(".tab-btn").forEach((tab) => {
+      tab.classList.remove("active");
+    });
+
+    tabActivo.classList.add("active");
+
+    aplicarFiltros();
+  }
+
+  function mostrarProductos() {
+    seccionProductos.style.display = "block";
+    seccionMasVendidos.style.display = "none";
+  }
+
+  function mostrarMasVendidos() {
+    seccionProductos.style.display = "none";
+    seccionMasVendidos.style.display = "block";
+    renderizarMasVendidos();
+  }
+
+  btnVerProductos.addEventListener("click", mostrarProductos);
+
+  btnVerMasVendidos.addEventListener("click", mostrarMasVendidos);
+
+  btnMostrarForm.addEventListener("click", () => {
+    if (!puedeGestionar()) return;
+
+    formBox.classList.toggle("open");
+
+    if (!formBox.classList.contains("open")) {
+      limpiarFormulario();
+      limpiarMensaje();
+    }
+  });
+
+  btnCancelar.addEventListener("click", () => {
+    limpiarFormulario();
+    limpiarMensaje();
+    formBox.classList.remove("open");
+  });
+
+  btnGuardar.addEventListener("click", guardarProducto);
+
+  btnRecargar.addEventListener("click", cargarProductos);
+
+  buscarInput.addEventListener("input", aplicarFiltros);
+
+  filtroCategoria.addEventListener("change", aplicarFiltros);
+
+  tabTodos.addEventListener("click", () => activarTab(tabTodos, "todos"));
+
+  tabBajoStock.addEventListener("click", () => activarTab(tabBajoStock, "bajo-stock"));
+
+  tabActivos.addEventListener("click", () => activarTab(tabActivos, "activos"));
+
+  configurarVistaPorRol();
+  cargarProductos();
+})();
+</script>

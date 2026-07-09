@@ -1,0 +1,574 @@
+<!--htmlhint doctype-first:false -->
+
+<style>
+  .ventas-page {
+    display: grid;
+    gap: 20px;
+  }
+
+  .ventas-toolbar,
+  .venta-form-box,
+  .ventas-list-box {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  }
+
+  .ventas-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .ventas-toolbar h2,
+  .venta-form-box h2,
+  .ventas-list-box h2 {
+    color: #111827;
+    margin-bottom: 6px;
+  }
+
+  .ventas-toolbar p {
+    color: #6b7280;
+  }
+
+  .venta-form-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+  }
+
+  .venta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .venta-group label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+  }
+
+  .venta-group input,
+  .venta-group select {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .venta-group input:focus,
+  .venta-group select:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12);
+  }
+
+  .venta-items {
+    margin-top: 18px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .venta-item {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .venta-item strong {
+    color: #111827;
+  }
+
+  .venta-item p {
+    color: #6b7280;
+    font-size: 13px;
+  }
+
+  .venta-total-box {
+    margin-top: 18px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .venta-total-box h3 {
+    color: #111827;
+  }
+
+  .venta-total-box strong {
+    color: #ff6a00;
+    font-size: 26px;
+  }
+
+  .ventas-grid {
+    display: grid;
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  .venta-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  .venta-card-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+
+  .venta-badge {
+    background: #dcfce7;
+    color: #166534;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .venta-producto-linea {
+    color: #4b5563;
+    font-size: 14px;
+    padding: 4px 0;
+  }
+
+  .venta-message-ok {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 12px;
+  }
+
+  .venta-message-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 900px) {
+    .venta-form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .venta-item {
+      grid-template-columns: 1fr;
+    }
+
+    .venta-total-box {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+</style>
+
+<div class="ventas-page">
+
+  <section class="ventas-toolbar">
+    <div>
+      <h2>Módulo de ventas</h2>
+      <p>
+        Registra ventas, descuenta stock automáticamente y consulta el historial.
+      </p>
+    </div>
+
+    <button class="action-btn" id="btnRecargarVentas">
+      Recargar ventas
+    </button>
+  </section>
+
+  <section class="venta-form-box">
+    <h2>Registrar venta</h2>
+
+    <div class="venta-form-grid">
+
+      <div class="venta-group">
+        <label for="ventaProductoSelect">Producto</label>
+        <select id="ventaProductoSelect">
+          <option value="">Cargando productos...</option>
+        </select>
+      </div>
+
+      <div class="venta-group">
+        <label for="ventaCantidad">Cantidad</label>
+        <input type="number" id="ventaCantidad" min="1" value="1" />
+      </div>
+
+      <div class="venta-group">
+        <label for="ventaMetodoPago">Método de pago</label>
+        <select id="ventaMetodoPago">
+          <option value="Efectivo">Efectivo</option>
+          <option value="Yape">Yape</option>
+          <option value="Tarjeta">Tarjeta</option>
+        </select>
+      </div>
+
+      <button class="action-btn" id="btnAgregarItemVenta">
+        Agregar
+      </button>
+
+    </div>
+
+    <div id="ventaItems" class="venta-items"></div>
+
+    <div class="venta-total-box">
+      <h3>Total de venta</h3>
+      <strong id="ventaTotal">S/ 0.00</strong>
+    </div>
+
+    <div style="margin-top: 14px;">
+      <button class="action-btn" id="btnRegistrarVenta">
+        Registrar venta
+      </button>
+
+      <button class="action-btn danger" id="btnLimpiarVenta">
+        Limpiar
+      </button>
+    </div>
+
+    <div id="mensajeVenta"></div>
+  </section>
+
+  <section class="ventas-list-box">
+    <h2>Historial de ventas</h2>
+
+    <div id="listaVentas" class="ventas-grid">
+      <div class="card">
+        <h2>Cargando ventas...</h2>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const productoSelect = document.getElementById("ventaProductoSelect");
+  const cantidadInput = document.getElementById("ventaCantidad");
+  const metodoPagoSelect = document.getElementById("ventaMetodoPago");
+
+  const btnAgregarItem = document.getElementById("btnAgregarItemVenta");
+  const btnRegistrarVenta = document.getElementById("btnRegistrarVenta");
+  const btnLimpiarVenta = document.getElementById("btnLimpiarVenta");
+  const btnRecargarVentas = document.getElementById("btnRecargarVentas");
+
+  const ventaItemsBox = document.getElementById("ventaItems");
+  const ventaTotal = document.getElementById("ventaTotal");
+  const mensajeVenta = document.getElementById("mensajeVenta");
+  const listaVentas = document.getElementById("listaVentas");
+
+  let productos = [];
+  let ventaActual = [];
+
+  function mostrarMensaje(texto, tipo = "ok") {
+    mensajeVenta.innerHTML = `
+      <div class="${tipo === "ok" ? "venta-message-ok" : "venta-message-error"}">
+        ${texto}
+      </div>
+    `;
+  }
+
+  function limpiarMensaje() {
+    mensajeVenta.innerHTML = "";
+  }
+
+  async function cargarProductosVenta() {
+    try {
+      const response = await fetch("/api/v1/productos");
+      const data = await response.json();
+
+      if (!data.ok) {
+        productoSelect.innerHTML = `
+          <option value="">No se pudieron cargar productos</option>
+        `;
+        return;
+      }
+
+      productos = data.productos || [];
+
+      productoSelect.innerHTML = `
+        <option value="">Seleccione un producto</option>
+      `;
+
+      productos.forEach((producto) => {
+        productoSelect.innerHTML += `
+          <option value="${producto.id}">
+            ${producto.nombre} - S/ ${Number(producto.precioVenta).toFixed(2)} - Stock: ${producto.stock}
+          </option>
+        `;
+      });
+
+    } catch (error) {
+      productoSelect.innerHTML = `
+        <option value="">Error de conexión</option>
+      `;
+    }
+  }
+
+  function agregarItemVenta() {
+    limpiarMensaje();
+
+    const productoId = productoSelect.value;
+    const cantidad = parseInt(cantidadInput.value);
+
+    if (!productoId) {
+      mostrarMensaje("Seleccione un producto.", "error");
+      return;
+    }
+
+    if (!cantidad || cantidad <= 0) {
+      mostrarMensaje("Ingrese una cantidad válida.", "error");
+      return;
+    }
+
+    const producto = productos.find((p) => p.id === productoId);
+
+    if (!producto) {
+      mostrarMensaje("Producto no encontrado.", "error");
+      return;
+    }
+
+    if (cantidad > Number(producto.stock)) {
+      mostrarMensaje("La cantidad supera el stock disponible.", "error");
+      return;
+    }
+
+    const existente = ventaActual.find((item) => item.productoId === productoId);
+
+    if (existente) {
+      const nuevaCantidad = existente.cantidad + cantidad;
+
+      if (nuevaCantidad > Number(producto.stock)) {
+        mostrarMensaje("La cantidad total supera el stock disponible.", "error");
+        return;
+      }
+
+      existente.cantidad = nuevaCantidad;
+    } else {
+      ventaActual.push({
+        productoId: producto.id,
+        nombre: producto.nombre,
+        precioVenta: Number(producto.precioVenta),
+        cantidad: cantidad
+      });
+    }
+
+    renderizarVentaActual();
+  }
+
+  function renderizarVentaActual() {
+    if (ventaActual.length === 0) {
+      ventaItemsBox.innerHTML = `
+        <div class="card">
+          <p>No hay productos agregados a la venta.</p>
+        </div>
+      `;
+
+      ventaTotal.textContent = "S/ 0.00";
+      return;
+    }
+
+    let html = "";
+    let total = 0;
+
+    ventaActual.forEach((item, index) => {
+      const subtotal = item.precioVenta * item.cantidad;
+      total += subtotal;
+
+      html += `
+        <div class="venta-item">
+          <div>
+            <strong>${item.nombre}</strong>
+            <p>
+              Cantidad: ${item.cantidad} · Precio: S/ ${item.precioVenta.toFixed(2)}
+            </p>
+          </div>
+
+          <strong>S/ ${subtotal.toFixed(2)}</strong>
+
+          <button class="action-btn danger btnQuitarItemVenta" data-index="${index}">
+            Quitar
+          </button>
+        </div>
+      `;
+    });
+
+    ventaItemsBox.innerHTML = html;
+
+    ventaTotal.textContent = `S/ ${total.toFixed(2)}`;
+
+    document.querySelectorAll(".btnQuitarItemVenta").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const index = Number(btn.getAttribute("data-index"));
+        ventaActual.splice(index, 1);
+        renderizarVentaActual();
+      });
+    });
+  }
+
+  async function registrarVenta() {
+    limpiarMensaje();
+
+    if (ventaActual.length === 0) {
+      mostrarMensaje("Debe agregar productos a la venta.", "error");
+      return;
+    }
+
+    const payload = {
+      metodoPago: metodoPagoSelect.value,
+      productos: ventaActual.map((item) => {
+        return {
+          productoId: item.productoId,
+          cantidad: item.cantidad
+        };
+      })
+    };
+
+    try {
+      const response = await fetch("/api/v1/ventas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        mostrarMensaje(data.message || "No se pudo registrar la venta.", "error");
+        return;
+      }
+
+      mostrarMensaje(`Venta registrada correctamente. Total: S/ ${Number(data.total).toFixed(2)}`);
+
+      ventaActual = [];
+      renderizarVentaActual();
+
+      await cargarProductosVenta();
+      await cargarVentas();
+
+    } catch (error) {
+      mostrarMensaje("Error de conexión con el servidor.", "error");
+    }
+  }
+
+  async function cargarVentas() {
+    listaVentas.innerHTML = `
+      <div class="card">
+        <h2>Cargando ventas...</h2>
+      </div>
+    `;
+
+    try {
+      const response = await fetch("/api/v1/ventas");
+      const data = await response.json();
+
+      if (!data.ok) {
+        listaVentas.innerHTML = `
+          <div class="card">
+            <h2>Error</h2>
+            <p>${data.message || "No se pudieron cargar las ventas."}</p>
+          </div>
+        `;
+        return;
+      }
+
+      renderizarVentas(data.ventas || []);
+
+    } catch (error) {
+      listaVentas.innerHTML = `
+        <div class="card">
+          <h2>Error de conexión</h2>
+          <p>No se pudo conectar con la API de ventas.</p>
+        </div>
+      `;
+    }
+  }
+
+  function renderizarVentas(ventas) {
+    if (ventas.length === 0) {
+      listaVentas.innerHTML = `
+        <div class="card">
+          <h2>Sin ventas</h2>
+          <p>No hay ventas registradas todavía.</p>
+        </div>
+      `;
+      return;
+    }
+
+    let html = "";
+
+    ventas.forEach((venta) => {
+      const productosHtml = (venta.productos || []).map((producto) => {
+        return `
+          <div class="venta-producto-linea">
+            ${producto.nombre} x ${producto.cantidad}
+            — S/ ${Number(producto.subtotal).toFixed(2)}
+          </div>
+        `;
+      }).join("");
+
+      html += `
+        <div class="venta-card">
+          <div class="venta-card-header">
+            <div>
+              <h3>Venta #${venta.id}</h3>
+              <p>${venta.fecha || "Sin fecha"}</p>
+              <p>Usuario: ${venta.usuario || "No registrado"}</p>
+            </div>
+
+            <div>
+              <span class="venta-badge">${venta.estado}</span>
+              <h2>S/ ${Number(venta.total).toFixed(2)}</h2>
+              <p>${venta.metodoPago}</p>
+            </div>
+          </div>
+
+          ${productosHtml}
+        </div>
+      `;
+    });
+
+    listaVentas.innerHTML = html;
+  }
+
+  function limpiarVenta() {
+    ventaActual = [];
+    limpiarMensaje();
+    renderizarVentaActual();
+  }
+
+  btnAgregarItem.addEventListener("click", agregarItemVenta);
+  btnRegistrarVenta.addEventListener("click", registrarVenta);
+  btnLimpiarVenta.addEventListener("click", limpiarVenta);
+  btnRecargarVentas.addEventListener("click", cargarVentas);
+
+  renderizarVentaActual();
+  cargarProductosVenta();
+  cargarVentas();
+})();
+</script>

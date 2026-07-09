@@ -1,0 +1,544 @@
+<!--htmlhint doctype-first:false -->
+
+<style>
+  .config-page {
+    display: grid;
+    gap: 20px;
+  }
+
+  .config-toolbar,
+  .config-card,
+  .config-panel {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.05);
+  }
+
+  .config-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .config-toolbar h2,
+  .config-card h3,
+  .config-panel h3 {
+    color: #111827;
+    margin-bottom: 6px;
+  }
+
+  .config-toolbar p,
+  .config-card p,
+  .config-panel p {
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  .config-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .config-group {
+    display: grid;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .config-group label {
+    color: #374151;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .config-group input,
+  .config-group select {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    outline: none;
+  }
+
+  .config-group input:focus,
+  .config-group select:focus {
+    border-color: #ff6a00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.12);
+  }
+
+  .config-actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .config-message-ok {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 14px;
+  }
+
+  .config-message-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    padding: 12px;
+    border-radius: 12px;
+    margin-top: 14px;
+  }
+
+  .config-info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .config-info-row:last-child {
+    border-bottom: none;
+  }
+
+  .config-info-row span {
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  .config-info-row strong {
+    color: #111827;
+    font-size: 14px;
+    text-align: right;
+  }
+
+  .config-warning {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    padding: 14px;
+    border-radius: 14px;
+    margin-top: 14px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 900px) {
+    .config-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .config-toolbar {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .config-info-row {
+      flex-direction: column;
+    }
+
+    .config-info-row strong {
+      text-align: left;
+    }
+  }
+</style>
+
+<div class="config-page">
+
+  <section class="config-toolbar">
+    <div>
+      <h2>Configuración del sistema</h2>
+      <p>
+        Ajustes locales para la experiencia del panel de gestión.
+      </p>
+    </div>
+
+    <div>
+      <button class="action-btn" id="btnConfigGuardarTodo">
+        Guardar cambios
+      </button>
+    </div>
+  </section>
+
+  <section class="config-grid">
+
+    <div class="config-card">
+      <h3>Preferencias visuales</h3>
+
+      <p>
+        Estos cambios se guardan en el navegador actual.
+      </p>
+
+      <div class="config-group">
+        <label for="configModoVista">Modo de vista</label>
+
+        <select id="configModoVista">
+          <option value="normal">Normal</option>
+          <option value="compacto">Compacto</option>
+        </select>
+      </div>
+
+      <div class="config-group">
+        <label for="configMostrarNotificaciones">Notificaciones</label>
+
+        <select id="configMostrarNotificaciones">
+          <option value="true">Mostrar alertas</option>
+          <option value="false">Ocultar alertas</option>
+        </select>
+      </div>
+
+      <div class="config-actions">
+        <button class="action-btn" id="btnAplicarVista">
+          Aplicar vista
+        </button>
+      </div>
+    </div>
+
+    <div class="config-card">
+      <h3>Tienda activa</h3>
+
+      <p>
+        Selecciona la tienda principal para trabajar en el panel.
+      </p>
+
+      <div class="config-group">
+        <label for="configTiendaActiva">Tienda principal</label>
+
+        <select id="configTiendaActiva">
+          <option value="">
+            Cargando tiendas...
+          </option>
+        </select>
+      </div>
+
+      <div class="config-info-row">
+        <span>Dirección</span>
+        <strong id="configTiendaDireccion">-</strong>
+      </div>
+
+      <div class="config-info-row">
+        <span>Estado</span>
+        <strong id="configTiendaEstado">-</strong>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="config-grid">
+
+    <div class="config-card">
+      <h3>Datos del sistema</h3>
+
+      <div class="config-group">
+        <label for="configNombreSistema">Nombre del sistema</label>
+
+        <input
+          type="text"
+          id="configNombreSistema"
+          placeholder="Ej. Gestor de Tiendas Abad"
+        />
+      </div>
+
+      <div class="config-group">
+        <label for="configNombreNegocio">Nombre del negocio</label>
+
+        <input
+          type="text"
+          id="configNombreNegocio"
+          placeholder="Ej. Tiendas Abad"
+        />
+      </div>
+
+      <div class="config-warning">
+        Esta configuración es local. Para guardar estos datos en MongoDB,
+        después podemos crear una colección llamada configuracion.
+      </div>
+    </div>
+
+    <div class="config-card">
+      <h3>Mantenimiento local</h3>
+
+      <p>
+        Opciones para limpiar datos temporales guardados en el navegador.
+      </p>
+
+      <div class="config-actions">
+        <button class="action-btn danger" id="btnLimpiarCarrito">
+          Vaciar carrito
+        </button>
+
+        <button class="action-btn danger" id="btnResetConfig">
+          Reiniciar configuración local
+        </button>
+      </div>
+
+      <div class="config-info-row">
+        <span>Productos en carrito</span>
+        <strong id="configCantidadCarrito">0</strong>
+      </div>
+
+      <div class="config-info-row">
+        <span>Rol actual</span>
+        <strong id="configRolActual">-</strong>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="config-panel">
+    <h3>Estado de configuración</h3>
+
+    <p>
+      Resumen de preferencias activas en este navegador.
+    </p>
+
+    <div id="configResumen"></div>
+
+    <div id="mensajeConfig"></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const usuario = document.getElementById("usuarioActivo")?.value || "Usuario";
+  const rolOriginal = document.getElementById("rolUsuario")?.value || "cliente";
+
+  let rol = rolOriginal.toLowerCase();
+
+  if (rol === "admin") {
+    rol = "administrador";
+  }
+
+  const inputNombreSistema = document.getElementById("configNombreSistema");
+  const inputNombreNegocio = document.getElementById("configNombreNegocio");
+  const selectModoVista = document.getElementById("configModoVista");
+  const selectNotificaciones = document.getElementById("configMostrarNotificaciones");
+  const selectTienda = document.getElementById("configTiendaActiva");
+
+  const mensajeConfig = document.getElementById("mensajeConfig");
+
+  let tiendasConfig = [];
+
+  cargarConfiguracion();
+  cargarTiendasConfig();
+  actualizarResumen();
+  actualizarInfoCarrito();
+
+  function cargarConfiguracion() {
+    inputNombreSistema.value =
+      localStorage.getItem("configNombreSistema") || "Gestor de Tiendas Abad";
+
+    inputNombreNegocio.value =
+      localStorage.getItem("configNombreNegocio") || "Tiendas Abad";
+
+    selectModoVista.value =
+      localStorage.getItem("configModoVista") || "normal";
+
+    selectNotificaciones.value =
+      localStorage.getItem("configMostrarNotificaciones") || "true";
+
+    document.getElementById("configRolActual").textContent = rol;
+  }
+
+  async function cargarTiendasConfig() {
+    try {
+      const response = await fetch("/api/v1/tiendas");
+      const data = await response.json();
+
+      if (!data.ok) {
+        selectTienda.innerHTML = `
+          <option value="">
+            No se pudieron cargar tiendas
+          </option>
+        `;
+        return;
+      }
+
+      tiendasConfig = data.tiendas || [];
+
+      if (tiendasConfig.length === 0) {
+        selectTienda.innerHTML = `
+          <option value="">
+            No hay tiendas registradas
+          </option>
+        `;
+        return;
+      }
+
+      renderizarTiendasConfig();
+
+    } catch (error) {
+      selectTienda.innerHTML = `
+        <option value="">
+          Error de conexión
+        </option>
+      `;
+    }
+  }
+
+  function renderizarTiendasConfig() {
+    const tiendaGuardadaId = localStorage.getItem("tiendaActivaId");
+
+    selectTienda.innerHTML = "";
+
+    tiendasConfig.forEach((tienda) => {
+      selectTienda.innerHTML += `
+        <option value="${tienda.id}">
+          ${tienda.nombre || "Tienda sin nombre"}
+        </option>
+      `;
+    });
+
+    const existe = tiendasConfig.some((tienda) => tienda.id === tiendaGuardadaId);
+
+    if (tiendaGuardadaId && existe) {
+      selectTienda.value = tiendaGuardadaId;
+    } else {
+      selectTienda.value = tiendasConfig[0].id;
+    }
+
+    actualizarDetalleTienda();
+  }
+
+  function actualizarDetalleTienda() {
+    const tienda = tiendasConfig.find((item) => item.id === selectTienda.value);
+
+    if (!tienda) {
+      document.getElementById("configTiendaDireccion").textContent = "-";
+      document.getElementById("configTiendaEstado").textContent = "-";
+      return;
+    }
+
+    document.getElementById("configTiendaDireccion").textContent =
+      tienda.direccion || "Sin dirección";
+
+    document.getElementById("configTiendaEstado").textContent =
+      tienda.estado || "Activa";
+  }
+
+  function guardarConfiguracion() {
+    localStorage.setItem("configNombreSistema", inputNombreSistema.value.trim());
+    localStorage.setItem("configNombreNegocio", inputNombreNegocio.value.trim());
+    localStorage.setItem("configModoVista", selectModoVista.value);
+    localStorage.setItem("configMostrarNotificaciones", selectNotificaciones.value);
+
+    if (selectTienda.value) {
+      localStorage.setItem("tiendaActivaId", selectTienda.value);
+    }
+
+    aplicarVista();
+    actualizarResumen();
+
+    mostrarMensaje("Configuración guardada correctamente.", "ok");
+  }
+
+  function aplicarVista() {
+    const modo = selectModoVista.value;
+
+    if (modo === "compacto") {
+      document.body.classList.add("modo-compacto");
+    } else {
+      document.body.classList.remove("modo-compacto");
+    }
+  }
+
+  function limpiarCarrito() {
+    const confirmar = confirm("¿Seguro que deseas vaciar el carrito?");
+
+    if (!confirmar) return;
+
+    localStorage.removeItem("carrito");
+    actualizarInfoCarrito();
+
+    if (typeof actualizarBadgeCarrito === "function") {
+      actualizarBadgeCarrito();
+    }
+
+    mostrarMensaje("Carrito vaciado correctamente.", "ok");
+  }
+
+  function resetConfig() {
+    const confirmar = confirm("¿Seguro que deseas reiniciar la configuración local?");
+
+    if (!confirmar) return;
+
+    localStorage.removeItem("configNombreSistema");
+    localStorage.removeItem("configNombreNegocio");
+    localStorage.removeItem("configModoVista");
+    localStorage.removeItem("configMostrarNotificaciones");
+    localStorage.removeItem("tiendaActivaId");
+
+    cargarConfiguracion();
+    renderizarTiendasConfig();
+    actualizarResumen();
+
+    mostrarMensaje("Configuración local reiniciada.", "ok");
+  }
+
+  function actualizarInfoCarrito() {
+    const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+    const cantidad = carrito.reduce((total, item) => {
+      return total + Number(item.cantidad || 0);
+    }, 0);
+
+    document.getElementById("configCantidadCarrito").textContent = cantidad;
+  }
+
+  function actualizarResumen() {
+    const resumen = document.getElementById("configResumen");
+
+    resumen.innerHTML = `
+      <div class="config-info-row">
+        <span>Usuario actual</span>
+        <strong>${usuario}</strong>
+      </div>
+
+      <div class="config-info-row">
+        <span>Nombre del sistema</span>
+        <strong>${inputNombreSistema.value || "Gestor de Tiendas Abad"}</strong>
+      </div>
+
+      <div class="config-info-row">
+        <span>Nombre del negocio</span>
+        <strong>${inputNombreNegocio.value || "Tiendas Abad"}</strong>
+      </div>
+
+      <div class="config-info-row">
+        <span>Modo de vista</span>
+        <strong>${selectModoVista.value}</strong>
+      </div>
+
+      <div class="config-info-row">
+        <span>Notificaciones</span>
+        <strong>${selectNotificaciones.value === "true" ? "Activas" : "Ocultas"}</strong>
+      </div>
+    `;
+  }
+
+  function mostrarMensaje(texto, tipo) {
+    mensajeConfig.innerHTML = `
+      <div class="${tipo === "ok" ? "config-message-ok" : "config-message-error"}">
+        ${texto}
+      </div>
+    `;
+
+    setTimeout(() => {
+      mensajeConfig.innerHTML = "";
+    }, 3500);
+  }
+
+  document.getElementById("btnConfigGuardarTodo").addEventListener("click", guardarConfiguracion);
+  document.getElementById("btnAplicarVista").addEventListener("click", aplicarVista);
+  document.getElementById("btnLimpiarCarrito").addEventListener("click", limpiarCarrito);
+  document.getElementById("btnResetConfig").addEventListener("click", resetConfig);
+
+  selectTienda.addEventListener("change", actualizarDetalleTienda);
+})();
+</script>

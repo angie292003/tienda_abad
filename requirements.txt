@@ -1,0 +1,6 @@
+Flask
+pymongo
+certifi
+python-dotenv
+Werkzeug
+dnspython
